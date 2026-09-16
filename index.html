@@ -105,7 +105,7 @@
   }
   h1, h2, h3, .group-title, .ring { font-family: "Outfit", "DM Sans", system-ui, sans-serif; }
   img { max-width: 100%; }
-  .wrap { max-width: 54rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  .wrap { max-width: 62rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
 
   /* Masthead: a soft card with layered pastel waves */
   .masthead {
@@ -232,7 +232,7 @@
   button:disabled { opacity: 0.5; cursor: not-allowed; filter: none; transform: none; }
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
-  input[type="text"], input[type="number"], input[type="password"], input[type="date"] {
+  input[type="text"], input[type="email"], input[type="number"], input[type="password"], input[type="date"] {
     font: inherit; color: var(--ink); background: var(--surface);
     border: 1px solid var(--line-strong); border-radius: 12px;
     padding: 0.5rem 0.7rem; min-width: 0; width: 100%;
@@ -257,7 +257,7 @@
   .name-example b { color: var(--ink); font-weight: 600; }
 
   .table-scroll { position: relative; overflow-x: auto; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
-  table { border-collapse: collapse; width: 100%; min-width: 40rem; }
+  table { border-collapse: collapse; width: 100%; min-width: 68rem; }
   th, td { padding: 0.55rem 0.65rem; text-align: left; vertical-align: top; }
   th { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); background: var(--surface-2); }
   tbody tr + tr td { border-top: 1px solid var(--line); }
@@ -270,8 +270,8 @@
   tbody tr:nth-child(3n+1) td.n::before { background: var(--sage-soft); }
   tbody tr:nth-child(3n+2) td.n::before { background: var(--peach-soft); }
   tbody tr:nth-child(3n) td.n::before { background: var(--pink-soft); }
-  td.pages-cell { width: 8.5rem; }
-  td.pw-cell { width: 13rem; }
+  td.pages-cell { width: 6.5rem; }
+  td.pw-cell { width: 11.5rem; }
   td.pw-cell input { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
   td.act { width: 5rem; text-align: right; padding-top: 0.75rem; }
   .saves-as { margin-top: 0.3rem; font-size: 0.8rem; color: var(--ink-soft); overflow-wrap: anywhere; }
@@ -298,6 +298,43 @@
   summary { cursor: pointer; font-weight: 600; font-family: "Outfit", "DM Sans", sans-serif; font-size: 1.05rem; }
   details p, details li { color: var(--ink-soft); font-size: 0.95rem; max-width: 40rem; }
   code { font-size: 0.9em; background: var(--surface-2); padding: 0.05rem 0.35rem; border-radius: 6px; white-space: nowrap; }
+
+  textarea {
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: 12px;
+    padding: 0.6rem 0.75rem; width: 100%; min-height: 11.5rem; resize: vertical; line-height: 1.5;
+  }
+  #emailBar { background: var(--pink-soft); margin-bottom: 1.1rem; }
+  #emailBar .naming-fields { grid-template-columns: minmax(0, 3fr) minmax(7rem, 1fr); }
+  #emailBar .naming-fields + .field { margin-top: 0.75rem; }
+  .bar-note { color: var(--ink-soft); font-size: 0.9rem; }
+  td.email-cell { width: 14rem; }
+  td.inv-cell { width: 8rem; }
+  td.amt-cell { width: 7.5rem; }
+  td.name-cell { width: 14rem; min-width: 12rem; }
+
+  .file-list { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: 0.6rem; }
+  .file-item {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.6rem 1rem; align-items: center;
+    background: var(--surface); border-radius: 16px; padding: 0.8rem 0.9rem;
+  }
+  .file-item .fi-name { font-weight: 600; overflow-wrap: anywhere; }
+  .file-item .fi-meta { font-size: 0.875rem; color: var(--ink-soft); overflow-wrap: anywhere; }
+  .file-item .fi-status { font-size: 0.85rem; color: var(--ok); margin-top: 0.15rem; }
+  .file-item .fi-status:empty { display: none; }
+  .file-item .fi-status.err { color: var(--err); }
+  .file-item .fi-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: flex-end; }
+  .file-item button { font-size: 0.875rem; padding: 0.45rem 0.8rem; }
+  .file-item button.mail { background: var(--sage); border-color: transparent; color: var(--btn-ink); }
+  .file-item button.mail:hover { filter: brightness(1.04); }
+  .file-item.sent { box-shadow: inset 4px 0 0 var(--sage); }
+  .list-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; align-items: baseline; margin-top: 1.3rem; }
+  .list-head h4 { margin: 0; font-family: "Outfit", "DM Sans", sans-serif; font-weight: 600; font-size: 1.05rem; }
+  @media (max-width: 600px) {
+    .file-item { grid-template-columns: 1fr; }
+    .file-item .fi-actions { justify-content: flex-start; }
+    #emailBar .naming-fields { grid-template-columns: 1fr; }
+  }
 
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
@@ -328,7 +365,7 @@
     <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <h1>Split and lock PDFs</h1>
     <div class="rule" aria-hidden="true"></div>
-    <p class="lede">Turn one combined PDF into separate files, each protected with its own password. Useful for payslips, statements and letters.</p>
+    <p class="lede">Turn one combined PDF into separate files, each protected with its own password. Useful for invoices, payslips and statements, with an email draft for each.</p>
     <svg class="waves" viewBox="0 0 800 140" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,70 C120,20 220,30 330,62 C450,98 560,40 680,38 C740,37 780,50 800,58 L800,140 L0,140 Z" fill="var(--wave-1)"/>
       <path d="M0,98 C90,70 190,62 300,84 C420,108 520,74 640,72 C720,71 770,86 800,94 L800,140 L0,140 Z" fill="var(--wave-2)" opacity=".85"/>
@@ -367,7 +404,7 @@
       <div class="step-num" aria-hidden="true">2</div>
       <h2 id="h2-step">Set up the files</h2>
       <div class="step-body">
-        <p class="hint">Each row becomes one PDF. Pages can be single pages or ranges, like <code>1-3</code> or <code>1,4,6-7</code>. Rows without a name use the original file name and a number.</p>
+        <p class="hint">Each row becomes one PDF. Pages can be single pages or ranges, like <code>1-3</code> or <code>1,4,6-7</code>. Invoice numbers can go into file names and emails. Rows without a name or invoice number use the original file name and a number.</p>
 
         <div class="toolbar">
           <div class="row">
@@ -375,13 +412,15 @@
             <label class="inline" for="everyN">One file every</label>
             <input type="number" id="everyN" min="1" value="1">
             <span>pages</span>
-            <button type="button" id="splitEveryBtn">Create rows</button>
+            <button type="button" id="splitEveryBtn">Apply</button>
           </div>
         </div>
         <div class="toolbar" id="namingBar">
           <div class="row">
             <label class="group-title" for="namePreset">File names</label>
             <select id="namePreset">
+              <option value="{invoice}_{name}" selected>Invoice no. and name</option>
+              <option value="{date}_{invoice}_{name}">Date, invoice no., name</option>
               <option value="{name}">Name only</option>
               <option value="{date}_{doc}_{name}">Date, document, name</option>
               <option value="{doc}_{name}_{date}">Document, name, date</option>
@@ -413,9 +452,9 @@
           </div>
           <div class="custom-row" id="customRow" hidden>
             <label class="field" for="customPattern">Custom format
-              <input type="text" id="customPattern" value="{date}_{doc}_{name}" autocomplete="off" spellcheck="false">
+              <input type="text" id="customPattern" value="{doc}_{invoice}_{name}" autocomplete="off" spellcheck="false">
             </label>
-            <p class="tokens">Click to insert: <code data-token="{name}">{name}</code> <code data-token="{doc}">{doc}</code> <code data-token="{date}">{date}</code> <code data-token="{nn}">{nn}</code> for 01, 02 and so on, <code data-token="{pages}">{pages}</code> <code data-token="{source}">{source}</code></p>
+            <p class="tokens">Click to insert: <code data-token="{name}">{name}</code> <code data-token="{invoice}">{invoice}</code> <code data-token="{doc}">{doc}</code> <code data-token="{date}">{date}</code> <code data-token="{nn}">{nn}</code> for 01, 02 and so on, <code data-token="{pages}">{pages}</code> <code data-token="{source}">{source}</code></p>
           </div>
           <p class="name-example">First file saves as <b id="nameExample">—</b></p>
         </div>
@@ -436,6 +475,9 @@
               <tr>
                 <th scope="col"><span class="sr-only">Row</span></th>
                 <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Invoice no.</th>
+                <th scope="col">Amount</th>
                 <th scope="col">Pages</th>
                 <th scope="col">Password</th>
                 <th scope="col"><span class="sr-only">Remove</span></th>
@@ -458,9 +500,35 @@
 
     <section class="step" id="step3" aria-labelledby="h3-step">
       <div class="step-num" aria-hidden="true">3</div>
-      <h2 id="h3-step">Create the locked files</h2>
+      <h2 id="h3-step">Create and send</h2>
       <div class="step-body">
-        <p class="hint">Files are encrypted with AES-256 and bundled into one ZIP.</p>
+        <p class="hint">Files are encrypted with AES-256. You can save them all as a ZIP or email each one.</p>
+
+        <div class="toolbar" id="emailBar">
+          <div class="row">
+            <span class="group-title">Email message</span>
+            <span class="bar-note">Used when you email each file. Passwords are never put in the email.</span>
+          </div>
+          <div class="naming-fields">
+            <label class="field" for="emailSubject">Subject
+              <input type="text" id="emailSubject" value="Invoice {invoice}" autocomplete="off">
+            </label>
+            <label class="field" for="currency">Currency
+              <input type="text" id="currency" value="SGD" autocomplete="off" maxlength="6">
+            </label>
+          </div>
+          <label class="field" for="emailBody">Message
+            <textarea id="emailBody" spellcheck="true">Dear {name},
+
+Please find attached invoice {invoice} for {amount}.
+
+The attachment is password-protected. The password will be sent to you separately.
+
+Thank you.</textarea>
+          </label>
+          <p class="tokens" id="emailTokens">Click to insert: <code data-etoken="{name}">{name}</code> <code data-etoken="{invoice}">{invoice}</code> <code data-etoken="{amount}">{amount}</code> <code data-etoken="{file}">{file}</code></p>
+        </div>
+
         <button type="button" class="primary" id="createBtn">Create locked files</button>
         <div class="progress" id="progress" hidden><div></div></div>
         <p class="msg" id="createMsg" role="status" aria-live="polite"></p>
@@ -474,6 +542,13 @@
           </div>
           <div class="fallback-links" id="fallbackLinks"></div>
           <p class="msg" id="saveMsg" role="status" aria-live="polite"></p>
+
+          <div class="list-head">
+            <h4>Email each file</h4>
+            <span class="bar-note" id="sentCount"></span>
+          </div>
+          <p id="mailHelp">Email draft saves an email with the locked PDF attached. Open it to review and send it in Outlook.</p>
+          <ul class="file-list" id="fileList"></ul>
         </div>
       </div>
     </section>
@@ -483,7 +558,9 @@
       <p>This page uses open-source libraries (pdf-lib, JSZip and Papa Parse) that run entirely in your browser. Your PDF, the page ranges and the passwords stay in this tab and are cleared when you close or reload it.</p>
       <ul>
         <li>Recipients need the password to open their file. Most PDF readers support AES-256, including Adobe Acrobat Reader, Chrome, Edge, and the built-in readers on iPhone and Android.</li>
-        <li>CSV files should have the columns <code>name</code>, <code>pages</code> and <code>password</code>. The password column can be left empty and filled in here.</li>
+        <li>CSV files can have the columns <code>name</code>, <code>email</code>, <code>invoice</code>, <code>amount</code>, <code>pages</code> and <code>password</code>. Only <code>pages</code> is required.</li>
+        <li>Email draft creates an email file with the locked PDF attached. Classic Outlook for Windows and Apple Mail open it as a new message ready to send. Other email apps may open it as a received message instead, so test one first.</li>
+        <li>The tool never sends email itself. You review and send each message from your own email app.</li>
         <li>File names follow the format you choose, with characters that aren't allowed in file names removed. If two files would get the same name, a number is added to the second.</li>
         <li>Avoid passwords that others could easily know or guess, such as ID numbers or birthdays.</li>
         <li>Fillable form fields and some interactive features in the original PDF may not carry over to the split files.</li>
@@ -506,7 +583,8 @@
     sourcePassword: null,
     pageCount: 0,
     rows: [],          // {name, pages, password}
-    naming: { pattern: "{name}", preset: "{name}", doc: "", date: "", dateFmt: "iso", spaces: "-" },
+    files: [],
+    naming: { pattern: "{invoice}_{name}", preset: "{invoice}_{name}", doc: "", date: "", dateFmt: "iso", spaces: "-" },
     zipBlob: null,
     zipName: "",
     pwCsv: "",
@@ -514,6 +592,7 @@
   let downloads = null;
 
   // ---------- Capability: downloads ----------
+  const STANDALONE_URL = "https://heyamelyn.github.io/PDF/";
   const inFrame = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
   let downloadsPromise = null;
   function getDownloads() {
@@ -535,20 +614,12 @@
   function showOpenInTab(msgEl, text) {
     msgEl.className = "msg err";
     msgEl.textContent = text + " ";
-    if (/^https?:$/.test(location.protocol)) {
-      const a = document.createElement("a");
-      a.href = location.href; a.target = "_blank"; a.rel = "noopener";
-      a.textContent = "Open the tool in a new tab";
-      a.style.color = "inherit"; a.style.fontWeight = "600";
-      msgEl.appendChild(a);
-      msgEl.appendChild(document.createTextNode(" and create the files there. If the link doesn't open, copy this address into a new tab: "));
-      const addr = document.createElement("code");
-      addr.textContent = location.href;
-      addr.style.whiteSpace = "normal"; addr.style.overflowWrap = "anywhere"; addr.style.userSelect = "all";
-      msgEl.appendChild(addr);
-    } else {
-      msgEl.appendChild(document.createTextNode("Ask the person who shared this tool for the standalone web page version."));
-    }
+    const a = document.createElement("a");
+    a.href = STANDALONE_URL; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = "Open the standalone page";
+    a.style.color = "inherit"; a.style.fontWeight = "600";
+    msgEl.appendChild(a);
+    msgEl.appendChild(document.createTextNode(" (" + STANDALONE_URL + ") and create the files there."));
   }
 
   function plainDownload(filename, data) {
@@ -685,6 +756,7 @@
     const nn = String(i + 1).padStart(width, "0");
     const values = {
       name: String(r.name || "").trim(),
+      invoice: String(r.invoice || "").trim(),
       doc: nm.doc.trim(),
       date: formatDate(nm.date, nm.dateFmt),
       nn: nn,
@@ -692,12 +764,12 @@
       pages: String(r.pages || "").replace(/\s+/g, ""),
       source: baseName(),
     };
-    let pattern = nm.pattern || "{name}";
-    // A row with no name falls back to the original file name and number
-    if (!values.name && /\{name\}/.test(pattern)) {
-      pattern = pattern.replace(/\{name\}/g, /\{source\}|\{nn\}/.test(pattern) ? "" : "{source}_{nn}");
-    }
-    const filled = pattern.replace(/\{(name|doc|date|nn|n|pages|source)\}/g, (_, k) => values[k]);
+    let pattern = nm.pattern || "{invoice}_{name}";
+    // Rows with nothing that identifies them fall back to the original file name and number
+    const identifies = (/\{name\}/.test(pattern) && values.name) || (/\{invoice\}/.test(pattern) && values.invoice) ||
+      /\{(nn|n|pages|source)\}/.test(pattern);
+    if (!identifies) pattern = pattern + "_{source}_{nn}";
+    const filled = pattern.replace(/\{(name|invoice|doc|date|nn|n|pages|source)\}/g, (_, k) => values[k]);
     return cleanFileName(filled, nm.spaces) || cleanFileName(values.source + "_" + nn, nm.spaces);
   }
 
@@ -783,8 +855,8 @@
     renderFileInfo();
     $("step1").classList.add("done");
     if (!state.rows.length) {
-      $("everyN").value = 1;
-      buildEveryN(1);
+      const n = parseInt($("everyN").value, 10);
+      buildEveryN(Number.isFinite(n) && n >= 1 ? n : 1);
     } else {
       renderRows();
     }
@@ -814,13 +886,36 @@
   }
 
   // ---------- Step 2: rows ----------
+  const COLS = 8;
+  function cellInput(r, field, opts) {
+    const td = document.createElement("td");
+    if (opts.cls) td.className = opts.cls;
+    const inp = document.createElement("input");
+    inp.type = opts.type || "text";
+    inp.value = r[field] || "";
+    inp.dataset.field = field;
+    if (opts.placeholder) inp.placeholder = opts.placeholder;
+    if (opts.inputMode) inp.inputMode = opts.inputMode;
+    inp.autocomplete = "off";
+    if (opts.nospell) inp.spellcheck = false;
+    inp.setAttribute("aria-label", opts.label);
+    inp.addEventListener("input", () => {
+      r[field] = inp.value;
+      inp.classList.remove("invalid");
+      invalidateResults();
+      if (opts.preview) updatePreviews();
+    });
+    td.appendChild(inp);
+    return td;
+  }
+
   function renderRows() {
     const tbody = $("rows");
     tbody.innerHTML = "";
     if (!state.rows.length) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
-      td.colSpan = 5; td.className = "empty";
+      td.colSpan = COLS; td.className = "empty";
       td.textContent = state.pageCount
         ? "No files set up yet. Use Quick split, add rows, or import a CSV."
         : "Choose a PDF first, then set up the files here.";
@@ -830,41 +925,30 @@
     }
     state.rows.forEach((r, i) => {
       const tr = document.createElement("tr");
+      const n = i + 1;
 
-      const tdN = document.createElement("td"); tdN.className = "n"; tdN.dataset.n = i + 1;
-      const nSr = document.createElement("span"); nSr.className = "sr-only"; nSr.textContent = "Row " + (i + 1); tdN.appendChild(nSr);
+      const tdN = document.createElement("td"); tdN.className = "n"; tdN.dataset.n = n;
+      const nSr = document.createElement("span"); nSr.className = "sr-only"; nSr.textContent = "Row " + n; tdN.appendChild(nSr);
 
-      const tdName = document.createElement("td");
-      const inName = document.createElement("input");
-      inName.type = "text"; inName.value = r.name; inName.placeholder = "Recipient or label";
-      inName.setAttribute("aria-label", "Name for row " + (i + 1));
-      inName.addEventListener("input", () => { r.name = inName.value; invalidateResults(); updatePreviews(); });
+      const tdName = cellInput(r, "name", { cls: "name-cell", placeholder: "Recipient or label", label: "Name for row " + n, preview: true });
       const savesAs = document.createElement("div");
       savesAs.className = "saves-as";
-      tdName.append(inName, savesAs);
+      tdName.appendChild(savesAs);
 
-      const tdPages = document.createElement("td"); tdPages.className = "pages-cell";
-      const inPages = document.createElement("input");
-      inPages.type = "text"; inPages.value = r.pages; inPages.inputMode = "numeric";
-      inPages.setAttribute("aria-label", "Pages for row " + (i + 1));
-      inPages.addEventListener("input", () => { r.pages = inPages.value; inPages.classList.remove("invalid"); invalidateResults(); updatePreviews(); });
-      tdPages.appendChild(inPages);
-
-      const tdPw = document.createElement("td"); tdPw.className = "pw-cell";
-      const inPw = document.createElement("input");
-      inPw.type = "text"; inPw.value = r.password; inPw.autocomplete = "off"; inPw.spellcheck = false;
-      inPw.setAttribute("aria-label", "Password for row " + (i + 1));
-      inPw.addEventListener("input", () => { r.password = inPw.value; inPw.classList.remove("invalid"); invalidateResults(); });
-      tdPw.appendChild(inPw);
+      const tdEmail = cellInput(r, "email", { cls: "email-cell", type: "email", placeholder: "name@example.com", label: "Email for row " + n, nospell: true });
+      const tdInv = cellInput(r, "invoice", { cls: "inv-cell", placeholder: "INV-001", label: "Invoice number for row " + n, preview: true, nospell: true });
+      const tdAmt = cellInput(r, "amount", { cls: "amt-cell", placeholder: "0.00", label: "Amount for row " + n, inputMode: "decimal", nospell: true });
+      const tdPages = cellInput(r, "pages", { cls: "pages-cell", label: "Pages for row " + n, inputMode: "numeric", preview: true, nospell: true });
+      const tdPw = cellInput(r, "password", { cls: "pw-cell", label: "Password for row " + n, nospell: true });
 
       const tdAct = document.createElement("td"); tdAct.className = "act";
       const del = document.createElement("button");
       del.type = "button"; del.className = "quiet"; del.textContent = "Remove";
-      del.setAttribute("aria-label", "Remove row " + (i + 1));
+      del.setAttribute("aria-label", "Remove row " + n);
       del.addEventListener("click", () => { state.rows.splice(i, 1); invalidateResults(); renderRows(); });
       tdAct.appendChild(del);
 
-      tr.append(tdN, tdName, tdPages, tdPw, tdAct);
+      tr.append(tdN, tdName, tdEmail, tdInv, tdAmt, tdPages, tdPw, tdAct);
       tr.dataset.index = i;
       tbody.appendChild(tr);
     });
@@ -872,33 +956,55 @@
     updatePreviews();
   }
 
+  function blankRow(pages) {
+    return { name: "", email: "", invoice: "", amount: "", pages: pages || "", password: "" };
+  }
+
+  // Rebuild page ranges, keeping each row's details (name, email, invoice, amount, password) in order
   function buildEveryN(n) {
     const total = state.pageCount;
+    const old = state.rows;
     const rows = [];
-    let k = 1;
+    let k = 0;
     for (let start = 1; start <= total; start += n) {
       const end = Math.min(start + n - 1, total);
-      rows.push({
-        name: "",
-        pages: start === end ? String(start) : start + "-" + end,
-        password: "",
-      });
+      const pages = start === end ? String(start) : start + "-" + end;
+      const prev = old[k];
+      rows.push(prev ? Object.assign({}, prev, { pages }) : blankRow(pages));
       k++;
     }
+    const hasDetails = (r) => r.name || r.email || r.invoice || r.amount || r.password;
+    const dropped = old.slice(rows.length).filter(hasDetails).length;
     state.rows = rows;
     invalidateResults();
     renderRows();
+    return dropped;
   }
 
-  $("splitEveryBtn").addEventListener("click", () => {
+  function applyQuickSplit() {
     const msg = $("tableMsg");
     if (!state.pageCount) { setMsg(msg, "Choose a PDF first.", "err"); return; }
     const n = parseInt($("everyN").value, 10);
     if (!Number.isFinite(n) || n < 1) { setMsg(msg, "Enter a whole number of pages, 1 or more.", "err"); return; }
-    const hadPasswords = state.rows.some((r) => r.password);
-    buildEveryN(n);
-    setMsg(msg, "Created " + state.rows.length + " rows." + (hadPasswords ? " Passwords were cleared, so generate or enter them again." : ""), "ok");
-  });
+    // Skip if the rows already match, so nothing re-renders under the cursor
+    const expected = [];
+    for (let start = 1; start <= state.pageCount; start += n) {
+      const end = Math.min(start + n - 1, state.pageCount);
+      expected.push(start === end ? String(start) : start + "-" + end);
+    }
+    if (expected.length === state.rows.length && expected.every((pg, i) => String(state.rows[i].pages).replace(/\s+/g, "") === pg)) return;
+    if (n > state.pageCount) { setMsg(msg, "The PDF only has " + state.pageCount + " pages, so this makes one file with every page.", "note"); }
+    const dropped = buildEveryN(n);
+    const count = state.rows.length;
+    let text = count + (count === 1 ? " file" : " files") + ", " + n + (n === 1 ? " page" : " pages") + " each.";
+    if (state.pageCount % n && count > 1) text += " The last file has " + (state.pageCount % n) + (state.pageCount % n === 1 ? " page." : " pages.");
+    if (dropped) text += " " + dropped + (dropped === 1 ? " row" : " rows") + " with details no longer fit and were removed.";
+    if (n <= state.pageCount) setMsg(msg, text, dropped ? "note" : "ok");
+  }
+
+  $("splitEveryBtn").addEventListener("click", applyQuickSplit);
+  $("everyN").addEventListener("change", applyQuickSplit);
+  $("everyN").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); applyQuickSplit(); } });
 
   $("genPwBtn").addEventListener("click", () => {
     const msg = $("tableMsg");
@@ -920,7 +1026,7 @@
 
   $("addRowBtn").addEventListener("click", () => {
     const n = state.rows.length + 1;
-    state.rows.push({ name: "", pages: "", password: "" });
+    state.rows.push(blankRow());
     invalidateResults(); renderRows();
     const inputs = $("rows").querySelectorAll("tr:last-child input");
     if (inputs[0]) inputs[0].focus();
@@ -947,15 +1053,22 @@
       complete: (res) => {
         const fields = (res.meta.fields || []);
         const pick = (cands) => fields.find((h) => cands.includes(h));
-        const kName = pick(["name", "file name", "filename", "file"]);
+        const kName = pick(["name", "recipient", "customer", "file name", "filename", "file"]);
+        const kEmail = pick(["email", "e-mail", "email address", "to"]);
+        const kInv = pick(["invoice", "invoice no", "invoice no.", "invoice number", "invoice #", "inv", "inv no", "inv no."]);
+        const kAmt = pick(["amount", "total", "amount due", "invoice amount"]);
         const kPages = pick(["pages", "page", "page range", "range"]);
         const kPw = pick(["password", "pw", "pass"]);
         if (!kPages) { setMsg(msg, "The CSV needs a \"pages\" column. Get the template to see the format.", "err"); return; }
-        const rows = res.data.map((d, i) => ({
-          name: kName ? String(d[kName] || "").trim() : "",
-          pages: String(d[kPages] || "").trim(),
-          password: kPw ? String(d[kPw] || "") : "",
-        })).filter((r) => r.pages || r.name);
+        const get = (d, k) => (k ? String(d[k] == null ? "" : d[k]).trim() : "");
+        const rows = res.data.map((d) => ({
+          name: get(d, kName),
+          email: get(d, kEmail),
+          invoice: get(d, kInv),
+          amount: get(d, kAmt),
+          pages: get(d, kPages),
+          password: kPw ? String(d[kPw] == null ? "" : d[kPw]) : "",
+        })).filter((r) => r.pages || r.name || r.invoice);
         if (!rows.length) { setMsg(msg, "The CSV has no rows.", "err"); return; }
         state.rows = rows; invalidateResults(); renderRows();
         const missingPw = rows.filter((r) => !r.password).length;
@@ -966,29 +1079,33 @@
   });
 
   $("templateBtn").addEventListener("click", () => {
-    const csv = "name,pages,password\r\nRecipient A,1-2,\r\nRecipient B,3,\r\nRecipient C,4-5,\r\n";
+    const csv = "name,email,invoice,amount,pages,password\r\nRecipient A,a@example.com,INV-001,120.00,1-2,\r\nRecipient B,b@example.com,INV-002,85.50,3,\r\nRecipient C,c@example.com,INV-003,240.00,4-5,\r\n";
     offerFile("split-and-lock-template.csv", csv, $("tableMsg"));
   });
 
   // ---------- Step 3: create ----------
   function invalidateResults() {
     if (!state.zipBlob) return;
-    state.zipBlob = null; state.pwCsv = "";
+    state.zipBlob = null; state.pwCsv = ""; state.files = [];
     $("results").hidden = true;
     $("fallbackLinks").innerHTML = "";
+    $("fileList").innerHTML = "";
     $("step3").classList.remove("done");
     setMsg($("createMsg"), "Setup changed. Create the files again to include your changes.", "note");
   }
+
+  const EMAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;
 
   function validate() {
     const problems = [];
     const tbody = $("rows");
     state.rows.forEach((r, i) => {
       const tr = tbody.querySelector('tr[data-index="' + i + '"]');
-      const inputs = tr ? tr.querySelectorAll("input") : [];
+      const field = (f) => tr && tr.querySelector('input[data-field="' + f + '"]');
       try { r._indexes = parsePages(r.pages, state.pageCount); }
-      catch (e) { problems.push("Row " + (i + 1) + ": " + e.message + "."); if (inputs[1]) inputs[1].classList.add("invalid"); }
-      if (!r.password) { problems.push("Row " + (i + 1) + ": password is empty."); if (inputs[2]) inputs[2].classList.add("invalid"); }
+      catch (e) { problems.push("Row " + (i + 1) + ": " + e.message + "."); if (field("pages")) field("pages").classList.add("invalid"); }
+      if (!r.password) { problems.push("Row " + (i + 1) + ": password is empty."); if (field("password")) field("password").classList.add("invalid"); }
+      if (r.email && !EMAIL_RE.test(r.email.trim())) { problems.push("Row " + (i + 1) + ": email address looks incomplete."); if (field("email")) field("email").classList.add("invalid"); }
     });
     assignFileNames();
     return problems;
@@ -1013,14 +1130,16 @@
     const fill = bar.firstElementChild; fill.style.width = "0%";
     $("results").hidden = true;
     $("fallbackLinks").innerHTML = "";
+    $("fileList").innerHTML = "";
 
     try {
       const { PDFDocument } = window.PDFLib;
       const opts = state.sourcePassword != null ? { password: state.sourcePassword } : {};
       const src = await PDFDocument.load(state.sourceBytes, opts);
       const zip = new window.JSZip();
-      const lines = ["name,file,pages,password"];
+      const lines = ["name,email,invoice,amount,file,pages,password"];
       const total = state.rows.length;
+      const files = [];
 
       for (let i = 0; i < total; i++) {
         const r = state.rows[i];
@@ -1034,8 +1153,13 @@
           permissions: { printing: "highResolution", copying: true, contentAccessibility: true, modifying: false, annotating: false, fillingForms: true, documentAssembly: false },
         });
         const bytes = await out.save();
-        zip.file(r._file + ".pdf", bytes);
-        lines.push([r.name, r._file + ".pdf", r.pages, r.password].map(csvEscape).join(","));
+        const fileName = r._file + ".pdf";
+        zip.file(fileName, bytes);
+        files.push({
+          name: r.name.trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(),
+          amount: (r.amount || "").trim(), password: r.password, fileName, bytes, sent: false,
+        });
+        lines.push([r.name, r.email, r.invoice, r.amount, fileName, r.pages, r.password].map(csvEscape).join(","));
         fill.style.width = Math.round(((i + 1) / total) * 90) + "%";
         await new Promise((res) => setTimeout(res, 0));
       }
@@ -1044,9 +1168,11 @@
       state.zipBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } });
       state.zipName = baseName() + "-locked.zip";
       state.pwCsv = lines.join("\r\n") + "\r\n";
+      state.files = files;
       fill.style.width = "100%";
 
       $("resultsTitle").textContent = total + (total === 1 ? " file ready" : " files ready");
+      renderFileList();
       $("results").hidden = false;
       $("step3").classList.add("done");
       setMsg(msg, "");
@@ -1060,6 +1186,184 @@
       setTimeout(() => { bar.hidden = true; }, 600);
     }
   });
+
+  // ---------- Email each file ----------
+  function formatAmount(raw) {
+    const s = String(raw || "").trim();
+    if (!s) return "";
+    const cur = $("currency").value.trim();
+    const bare = s.replace(/^(SGD|USD|S\$|US\$|\$)\s*/i, "").replace(/,/g, "");
+    if (/^-?\d+(\.\d+)?$/.test(bare)) {
+      const formatted = Number(bare).toLocaleString("en-SG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return cur ? cur + " " + formatted : formatted;
+    }
+    return s;
+  }
+
+  function fillEmailTemplate(text, f) {
+    const values = { name: f.name, invoice: f.invoice, amount: formatAmount(f.amount), file: f.fileName };
+    return String(text || "")
+      .replace(/\{(name|invoice|amount|file)\}/g, (_, k) => values[k] || "")
+      .replace(/[ \t]+([,.;:])/g, "$1")
+      .replace(/[ \t]{2,}/g, " ");
+  }
+
+  function bytesToBase64(bytes) {
+    let bin = "";
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    }
+    return btoa(bin);
+  }
+  const utf8B64 = (s) => bytesToBase64(new TextEncoder().encode(s));
+  const wrap76 = (s) => s.replace(/.{1,76}/g, "$&\r\n");
+  const encodeHeader = (s) => (/^[\x20-\x7e]*$/.test(s) ? s : "=?UTF-8?B?" + utf8B64(s) + "?=");
+
+  function buildEml(f) {
+    const subject = fillEmailTemplate($("emailSubject").value, f).replace(/[\r\n]+/g, " ").trim();
+    const body = fillEmailTemplate($("emailBody").value, f).replace(/\r?\n/g, "\r\n");
+    const boundary = "----=_Part_" + randomOwnerPassword().slice(0, 24);
+    const attName = encodeHeader(f.fileName.replace(/"/g, ""));
+    const headers = [];
+    if (f.email && EMAIL_RE.test(f.email)) headers.push("To: " + f.email);
+    headers.push(
+      "Subject: " + encodeHeader(subject),
+      "X-Unsent: 1",
+      "MIME-Version: 1.0",
+      'Content-Type: multipart/mixed; boundary="' + boundary + '"'
+    );
+    return headers.join("\r\n") + "\r\n\r\n" +
+      "--" + boundary + "\r\n" +
+      'Content-Type: text/plain; charset="utf-8"\r\n' +
+      "Content-Transfer-Encoding: base64\r\n\r\n" +
+      wrap76(utf8B64(body)) +
+      "--" + boundary + "\r\n" +
+      'Content-Type: application/pdf; name="' + attName + '"\r\n' +
+      "Content-Transfer-Encoding: base64\r\n" +
+      'Content-Disposition: attachment; filename="' + attName + '"\r\n\r\n' +
+      wrap76(bytesToBase64(f.bytes)) +
+      "--" + boundary + "--\r\n";
+  }
+
+  function markSent(f, li) {
+    f.sent = true;
+    li.classList.add("sent");
+    updateSentCount();
+  }
+
+  function updateSentCount() {
+    const total = state.files.length;
+    const done = state.files.filter((f) => f.sent).length;
+    $("sentCount").textContent = done ? done + " of " + total + " drafted" : "";
+  }
+
+  function setStatus(el, text, isErr) {
+    el.className = "fi-status" + (isErr ? " err" : "");
+    el.textContent = text;
+  }
+
+  function metaText(f) {
+    const parts = [];
+    parts.push(f.email ? "To " + f.email : "No email address");
+    if (f.invoice) parts.push("Invoice " + f.invoice);
+    if (f.amount) parts.push(formatAmount(f.amount));
+    return parts.join(", ");
+  }
+
+  function renderFileList() {
+    const list = $("fileList");
+    list.innerHTML = "";
+    $("mailHelp").textContent = inFrame
+      ? "Email drafts with the PDF attached work on the standalone page. Here, New email opens a message without the attachment."
+      : "Email draft saves an email with the locked PDF attached. Open the downloaded draft to review and send it in Outlook.";
+
+    state.files.forEach((f, i) => {
+      const li = document.createElement("li");
+      li.className = "file-item" + (f.sent ? " sent" : "");
+
+      const info = document.createElement("div");
+      const nm = document.createElement("div"); nm.className = "fi-name"; nm.textContent = f.fileName;
+      const meta = document.createElement("div"); meta.className = "fi-meta";
+      meta.textContent = metaText(f);
+      const status = document.createElement("div"); status.className = "fi-status"; status.setAttribute("role", "status");
+      info.append(nm, meta, status);
+
+      const actions = document.createElement("div"); actions.className = "fi-actions";
+
+      const draftBtn = document.createElement("button");
+      draftBtn.type = "button"; draftBtn.className = "mail";
+      draftBtn.textContent = "Email draft";
+      draftBtn.setAttribute("aria-label", "Email draft with attachment for " + f.fileName);
+      draftBtn.addEventListener("click", () => {
+        if (inFrame) {
+          status.className = "fi-status err";
+          status.textContent = "Drafts with attachments can't be saved in this view. ";
+          const a = document.createElement("a");
+          a.href = STANDALONE_URL; a.target = "_blank"; a.rel = "noopener";
+          a.textContent = "Use the standalone page";
+          a.style.color = "inherit"; a.style.fontWeight = "600";
+          status.appendChild(a);
+          return;
+        }
+        try {
+          const eml = buildEml(f);
+          plainDownload(f.fileName.replace(/\.pdf$/i, "") + ".eml", new Blob([eml], { type: "message/rfc822" }));
+          setStatus(status, "Draft saved. Open it from your downloads to review and send.");
+          markSent(f, li);
+        } catch (err) {
+          console.error(err);
+          setStatus(status, "The draft couldn't be created: " + (err && err.message ? err.message : err), true);
+        }
+      });
+
+      const mailtoBtn = document.createElement("button");
+      mailtoBtn.type = "button";
+      mailtoBtn.textContent = "New email";
+      mailtoBtn.setAttribute("aria-label", "New email without attachment for " + f.fileName);
+      mailtoBtn.addEventListener("click", () => {
+        const subject = fillEmailTemplate($("emailSubject").value, f).replace(/[\r\n]+/g, " ").trim();
+        const body = fillEmailTemplate($("emailBody").value, f);
+        const href = "mailto:" + (f.email && EMAIL_RE.test(f.email) ? encodeURIComponent(f.email).replace(/%40/g, "@") : "") +
+          "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body.replace(/\r?\n/g, "\r\n"));
+        const a = document.createElement("a");
+        a.href = href; a.target = inFrame ? "_blank" : "_self"; a.rel = "noopener";
+        document.body.appendChild(a); a.click(); a.remove();
+        setStatus(status, "Opening your email app. Attach " + f.fileName + " before sending. If nothing opens, set a default email app or use Email draft.");
+        markSent(f, li);
+      });
+
+      const pdfBtn = document.createElement("button");
+      pdfBtn.type = "button";
+      pdfBtn.textContent = "Save PDF";
+      pdfBtn.setAttribute("aria-label", "Save " + f.fileName);
+      pdfBtn.addEventListener("click", () => {
+        offerFile(f.fileName, new Blob([f.bytes], { type: "application/pdf" }), status);
+      });
+
+      const pwBtn = document.createElement("button");
+      pwBtn.type = "button";
+      pwBtn.textContent = "Copy password";
+      pwBtn.setAttribute("aria-label", "Copy password for " + f.fileName);
+      pwBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(f.password);
+          setStatus(status, "Password copied. Send it through a different channel, like SMS.");
+        } catch (e) {
+          status.className = "fi-status";
+          status.textContent = "Copying isn't allowed here. Password: ";
+          const code = document.createElement("code");
+          code.textContent = f.password; code.style.userSelect = "all";
+          status.appendChild(code);
+        }
+      });
+
+      actions.append(draftBtn, mailtoBtn, pdfBtn, pwBtn);
+      li.append(info, actions);
+      list.appendChild(li);
+    });
+    updateSentCount();
+  }
 
   $("saveZipBtn").addEventListener("click", () => {
     if (state.zipBlob) offerFile(state.zipName, state.zipBlob, $("saveMsg"));
@@ -1113,6 +1417,27 @@
     };
     c.addEventListener("click", insert);
     c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); insert(); } });
+  });
+
+  let lastEmailField = $("emailBody");
+  ["emailSubject", "emailBody"].forEach((id) => $(id).addEventListener("focus", () => { lastEmailField = $(id); }));
+  document.querySelectorAll("#emailTokens code[data-etoken]").forEach((c) => {
+    c.tabIndex = 0;
+    c.setAttribute("role", "button");
+    const insert = () => {
+      const inp = lastEmailField;
+      const start = inp.selectionStart != null ? inp.selectionStart : inp.value.length;
+      const end = inp.selectionEnd != null ? inp.selectionEnd : inp.value.length;
+      inp.value = inp.value.slice(0, start) + c.dataset.etoken + inp.value.slice(end);
+      inp.focus();
+      const pos = start + c.dataset.etoken.length;
+      inp.setSelectionRange(pos, pos);
+    };
+    c.addEventListener("click", insert);
+    c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); insert(); } });
+  });
+  $("currency").addEventListener("input", () => {
+    document.querySelectorAll("#fileList .fi-meta").forEach((el, i) => { if (state.files[i]) el.textContent = metaText(state.files[i]); });
   });
 
   syncNamingFields();
