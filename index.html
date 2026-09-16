@@ -547,7 +547,7 @@ Thank you.</textarea>
             <h4>Email each file</h4>
             <span class="bar-note" id="sentCount"></span>
           </div>
-          <p id="mailHelp">Email draft saves an email with the locked PDF attached. Open it to review and send it in Outlook.</p>
+          <p id="mailHelp">Email with PDF saves a draft with the locked PDF attached.</p>
           <ul class="file-list" id="fileList"></ul>
         </div>
       </div>
@@ -559,7 +559,7 @@ Thank you.</textarea>
       <ul>
         <li>Recipients need the password to open their file. Most PDF readers support AES-256, including Adobe Acrobat Reader, Chrome, Edge, and the built-in readers on iPhone and Android.</li>
         <li>CSV files can have the columns <code>name</code>, <code>email</code>, <code>invoice</code>, <code>amount</code>, <code>pages</code> and <code>password</code>. Only <code>pages</code> is required.</li>
-        <li>Email draft creates an email file with the locked PDF attached. Classic Outlook for Windows and Apple Mail open it as a new message ready to send. Other email apps may open it as a received message instead, so test one first.</li>
+        <li>Email with PDF creates an email file with the locked PDF attached. Classic Outlook for Windows and Apple Mail open it as a new message ready to send. Other email apps may open it as a received message instead, so test one first.</li>
         <li>The tool never sends email itself. You review and send each message from your own email app.</li>
         <li>File names follow the format you choose, with characters that aren't allowed in file names removed. If two files would get the same name, a number is added to the second.</li>
         <li>Avoid passwords that others could easily know or guess, such as ID numbers or birthdays.</li>
@@ -1275,8 +1275,8 @@ Thank you.</textarea>
     const list = $("fileList");
     list.innerHTML = "";
     $("mailHelp").textContent = inFrame
-      ? "Email drafts with the PDF attached work on the standalone page. Here, New email opens a message without the attachment."
-      : "Email draft saves an email with the locked PDF attached. Open the downloaded draft to review and send it in Outlook.";
+      ? "Emails with the PDF attached work on the standalone page. Here, Email without PDF opens a message you attach the file to yourself."
+      : "Email with PDF saves a draft (.eml file) with the locked PDF attached. Open it from your downloads to review and send it in Outlook. Email without PDF only fills in the text, because browsers can't attach files to a new email directly.";
 
     state.files.forEach((f, i) => {
       const li = document.createElement("li");
@@ -1293,8 +1293,9 @@ Thank you.</textarea>
 
       const draftBtn = document.createElement("button");
       draftBtn.type = "button"; draftBtn.className = "mail";
-      draftBtn.textContent = "Email draft";
-      draftBtn.setAttribute("aria-label", "Email draft with attachment for " + f.fileName);
+      draftBtn.textContent = "Email with PDF";
+      draftBtn.title = "Saves an email draft with the locked PDF already attached";
+      draftBtn.setAttribute("aria-label", "Email with PDF attached for " + f.fileName);
       draftBtn.addEventListener("click", () => {
         if (inFrame) {
           status.className = "fi-status err";
@@ -1309,7 +1310,7 @@ Thank you.</textarea>
         try {
           const eml = buildEml(f);
           plainDownload(f.fileName.replace(/\.pdf$/i, "") + ".eml", new Blob([eml], { type: "message/rfc822" }));
-          setStatus(status, "Draft saved. Open it from your downloads to review and send.");
+          setStatus(status, "Draft with PDF attached saved. Open the .eml file from your downloads to review and send it in Outlook.");
           markSent(f, li);
         } catch (err) {
           console.error(err);
@@ -1319,8 +1320,9 @@ Thank you.</textarea>
 
       const mailtoBtn = document.createElement("button");
       mailtoBtn.type = "button";
-      mailtoBtn.textContent = "New email";
-      mailtoBtn.setAttribute("aria-label", "New email without attachment for " + f.fileName);
+      mailtoBtn.textContent = "Email without PDF";
+      mailtoBtn.title = "Opens a new email with the text filled in. You attach the PDF yourself.";
+      mailtoBtn.setAttribute("aria-label", "Email without attachment for " + f.fileName);
       mailtoBtn.addEventListener("click", () => {
         const subject = fillEmailTemplate($("emailSubject").value, f).replace(/[\r\n]+/g, " ").trim();
         const body = fillEmailTemplate($("emailBody").value, f);
@@ -1329,7 +1331,7 @@ Thank you.</textarea>
         const a = document.createElement("a");
         a.href = href; a.target = inFrame ? "_blank" : "_self"; a.rel = "noopener";
         document.body.appendChild(a); a.click(); a.remove();
-        setStatus(status, "Opening your email app. Attach " + f.fileName + " before sending. If nothing opens, set a default email app or use Email draft.");
+        setStatus(status, "Opened an email without the attachment. Use Save PDF and attach " + f.fileName + " before sending, or use Email with PDF instead.");
         markSent(f, li);
       });
 
