@@ -1,0 +1,1128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Split and lock PDFs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Outfit:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F1E4E0;
+    --bg-2: #E7D2CD;
+    --surface: #FCF8F5;
+    --surface-2: #F7EFEA;
+    --ink: #3D3236;
+    --ink-soft: #7B6A6E;
+    --line: #EADCD6;
+    --line-strong: #DCC7C0;
+    --sage: #A9C9BD;
+    --sage-soft: #DCEAE3;
+    --sage-deep: #4E7D6F;
+    --peach: #F3C7A6;
+    --peach-soft: #FAE3D2;
+    --pink: #EDB3B5;
+    --pink-soft: #F8DEDE;
+    --btn-ink: #3D3236;
+    --ok: #4E7D6F;
+    --warn: #93601E;
+    --err: #A8424B;
+    --err-bg: #F9E1E1;
+    --focus: #4E7D6F;
+    --shadow: 0 1px 2px rgba(120, 80, 80, .06), 0 10px 30px -12px rgba(150, 100, 100, .22);
+    --wave-1: #F6D9C6;
+    --wave-2: #EFC1BF;
+    --wave-3: #B9D4C9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #231C1F;
+      --bg-2: #2B2226;
+      --surface: #2F272B;
+      --surface-2: #372E32;
+      --ink: #F4EAE6;
+      --ink-soft: #C2B1B3;
+      --line: #43383C;
+      --line-strong: #55484C;
+      --sage: #86AB9D;
+      --sage-soft: #33423D;
+      --sage-deep: #A9CFC1;
+      --peach: #E2AE8A;
+      --peach-soft: #46372F;
+      --pink: #D99A9D;
+      --pink-soft: #463337;
+      --btn-ink: #2A2226;
+      --ok: #A9CFC1;
+      --warn: #EBC07A;
+      --err: #F2A3A8;
+      --err-bg: #4A2C31;
+      --focus: #A9CFC1;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px -14px rgba(0,0,0,.6);
+      --wave-1: #5A4538;
+      --wave-2: #5E4145;
+      --wave-3: #3F5750;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #231C1F;
+    --bg-2: #2B2226;
+    --surface: #2F272B;
+    --surface-2: #372E32;
+    --ink: #F4EAE6;
+    --ink-soft: #C2B1B3;
+    --line: #43383C;
+    --line-strong: #55484C;
+    --sage: #86AB9D;
+    --sage-soft: #33423D;
+    --sage-deep: #A9CFC1;
+    --peach: #E2AE8A;
+    --peach-soft: #46372F;
+    --pink: #D99A9D;
+    --pink-soft: #463337;
+    --btn-ink: #2A2226;
+    --ok: #A9CFC1;
+    --warn: #EBC07A;
+    --err: #F2A3A8;
+    --err-bg: #4A2C31;
+    --focus: #A9CFC1;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px -14px rgba(0,0,0,.6);
+    --wave-1: #5A4538;
+    --wave-2: #5E4145;
+    --wave-3: #3F5750;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(90deg, var(--bg-2) 0 50%, var(--bg) 50% 100%);
+    color: var(--ink);
+    font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  h1, h2, h3, .group-title, .ring { font-family: "Outfit", "DM Sans", system-ui, sans-serif; }
+  img { max-width: 100%; }
+  .wrap { max-width: 54rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  /* Masthead: a soft card with layered pastel waves */
+  .masthead {
+    position: relative;
+    background: var(--surface);
+    border-radius: 26px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    padding: 2rem 2rem 6rem;
+  }
+  .masthead h1 {
+    font-size: clamp(1.9rem, 5vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    margin: 0 0 0.6rem;
+  }
+  .masthead .rule { width: 2.75rem; height: 3px; border-radius: 2px; background: var(--peach); margin: 0 0 0.9rem; }
+  .lede { margin: 0; color: var(--ink-soft); max-width: 30rem; }
+  .dots { position: absolute; top: 1.75rem; right: 1.75rem; display: grid; grid-template-columns: repeat(2, 14px); gap: 9px; }
+  .dots i { width: 14px; height: 14px; border-radius: 50%; display: block; }
+  .dots i:nth-child(1) { background: var(--sage); }
+  .dots i:nth-child(2) { background: var(--peach); }
+  .dots i:nth-child(3) { background: var(--sage); opacity: .6; }
+  .dots i:nth-child(4) { background: var(--pink); }
+  .waves { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 6.5rem; display: block; }
+  .privacy {
+    position: relative; z-index: 1;
+    display: flex; gap: 0.6rem; align-items: center;
+    margin: 1.2rem 0 0; font-size: 0.9rem; color: var(--ink);
+    background: var(--sage-soft);
+    padding: 0.55rem 1rem; border-radius: 999px;
+    width: fit-content; max-width: 100%;
+  }
+  .privacy svg { flex: none; color: var(--sage-deep); }
+
+  section.step {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0 1rem;
+    margin-top: 1.25rem;
+    background: var(--surface);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 1.5rem 1.5rem 1.6rem 1.25rem;
+  }
+  .step-num {
+    width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: "Outfit", "DM Sans", sans-serif;
+    font-weight: 600; font-variant-numeric: tabular-nums; color: var(--btn-ink);
+    background: var(--sage);
+  }
+  #step2 .step-num { background: var(--peach); }
+  #step3 .step-num { background: var(--pink); }
+  .step.done .step-num { box-shadow: 0 0 0 4px var(--surface), 0 0 0 6px var(--sage); }
+  h2 { font-size: 1.3rem; line-height: 2.5rem; margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+  .step-body { grid-column: 2; min-width: 0; position: relative; }
+  .hint { color: var(--ink-soft); font-size: 0.925rem; margin: 0.1rem 0 1rem; }
+
+  .drop {
+    position: relative;
+    display: flex; align-items: center; gap: 1rem;
+    border: 2px dashed var(--line-strong);
+    border-radius: 18px;
+    background: var(--surface-2);
+    padding: 1.25rem 1.4rem;
+    cursor: pointer;
+    transition: border-color .15s, background-color .15s;
+  }
+  .drop::before {
+    content: ""; flex: none; width: 3rem; height: 3rem; border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 50%, var(--surface) 0 38%, transparent 39%),
+      conic-gradient(var(--sage) 0 40%, var(--peach) 40% 70%, var(--pink) 70% 100%);
+  }
+  .drop:hover, .drop.over { border-color: var(--sage); background: var(--sage-soft); }
+  .drop strong { display: block; font-size: 1.05rem; }
+  .drop span { color: var(--ink-soft); font-size: 0.925rem; }
+  .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .drop:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  .file-chip {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--surface-2); border-radius: 18px; padding: 0.9rem 1.1rem; margin-top: 0.75rem;
+  }
+  .ring {
+    flex: none; width: 3.75rem; height: 3.75rem; border-radius: 50%;
+    display: grid; place-items: center; font-weight: 600; font-size: 1.15rem;
+    background:
+      radial-gradient(circle, var(--surface-2) 0 58%, transparent 59%),
+      conic-gradient(var(--sage) 0 55%, var(--peach) 55% 80%, var(--pink) 80% 100%);
+    font-variant-numeric: tabular-nums;
+  }
+  .file-chip .meta { min-width: 0; }
+  .file-chip b { display: block; overflow-wrap: anywhere; font-weight: 600; }
+  .file-chip .pages { color: var(--ink-soft); font-size: 0.925rem; }
+
+  .row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+  .toolbar { margin: 0 0 0.8rem; padding: 1rem 1.1rem; border-radius: 18px; background: var(--surface-2); }
+  #namingBar { background: var(--peach-soft); }
+  .toolbar.pw { background: var(--sage-soft); }
+  .toolbar label.inline { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .toolbar .group-title { font-weight: 600; margin-right: 0.4rem; font-size: 1.02rem; }
+
+  button, .btn {
+    font: inherit; font-weight: 600; font-size: 0.95rem;
+    border-radius: 999px; padding: 0.55rem 1.05rem;
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink);
+    cursor: pointer; line-height: 1.2;
+    transition: background-color .15s, border-color .15s, transform .1s;
+  }
+  button:hover, .btn:hover { border-color: var(--ink-soft); }
+  button:active { transform: translateY(1px); }
+  button.primary {
+    background: linear-gradient(120deg, var(--peach), var(--pink));
+    color: var(--btn-ink); border-color: transparent;
+    padding: 0.7rem 1.35rem;
+    box-shadow: 0 8px 18px -10px rgba(200, 120, 120, .8);
+  }
+  button.primary:hover { filter: brightness(1.04) saturate(1.05); border-color: transparent; }
+  button.quiet { border-color: transparent; background: transparent; color: var(--ink-soft); padding: 0.4rem 0.6rem; }
+  button.quiet:hover { color: var(--err); border-color: transparent; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; filter: none; transform: none; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  input[type="text"], input[type="number"], input[type="password"], input[type="date"] {
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: 12px;
+    padding: 0.5rem 0.7rem; min-width: 0; width: 100%;
+  }
+  input::placeholder { color: var(--ink-soft); opacity: .75; }
+  input[type="number"] { width: 5rem; }
+  input.invalid { border-color: var(--err); background: var(--err-bg); }
+  select {
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: 12px; padding: 0.5rem 0.7rem; max-width: 100%;
+  }
+  .naming-fields { margin-top: 0.9rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: 0.75rem 0.9rem; }
+  .field { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.875rem; color: var(--ink-soft); min-width: 0; }
+  .field input, .field select { color: var(--ink); font-size: 1rem; }
+  .field input:disabled, .field select:disabled { opacity: 0.45; cursor: not-allowed; }
+  .custom-row { margin-top: 0.9rem; }
+  .custom-row .field { max-width: 28rem; }
+  .tokens { margin: 0.5rem 0 0; font-size: 0.875rem; color: var(--ink-soft); line-height: 2; }
+  .tokens code { cursor: pointer; background: var(--surface); border-radius: 999px; padding: 0.15rem 0.55rem; }
+  .tokens code:hover { background: var(--pink-soft); }
+  .name-example { margin: 0.9rem 0 0; font-size: 0.925rem; color: var(--ink-soft); overflow-wrap: anywhere; }
+  .name-example b { color: var(--ink); font-weight: 600; }
+
+  .table-scroll { position: relative; overflow-x: auto; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
+  table { border-collapse: collapse; width: 100%; min-width: 40rem; }
+  th, td { padding: 0.55rem 0.65rem; text-align: left; vertical-align: top; }
+  th { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); background: var(--surface-2); }
+  tbody tr + tr td { border-top: 1px solid var(--line); }
+  td.n { width: 2.75rem; padding-top: 1.05rem; }
+  td.n::before {
+    content: attr(data-n); display: inline-grid; place-items: center;
+    width: 1.6rem; height: 1.6rem; border-radius: 50%; font-size: 0.8rem; font-weight: 600;
+    background: var(--surface-2); color: var(--ink-soft);
+  }
+  tbody tr:nth-child(3n+1) td.n::before { background: var(--sage-soft); }
+  tbody tr:nth-child(3n+2) td.n::before { background: var(--peach-soft); }
+  tbody tr:nth-child(3n) td.n::before { background: var(--pink-soft); }
+  td.pages-cell { width: 8.5rem; }
+  td.pw-cell { width: 13rem; }
+  td.pw-cell input { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  td.act { width: 5rem; text-align: right; padding-top: 0.75rem; }
+  .saves-as { margin-top: 0.3rem; font-size: 0.8rem; color: var(--ink-soft); overflow-wrap: anywhere; }
+  .empty { padding: 1.4rem; color: var(--ink-soft); }
+
+  .msg { margin: 0.75rem 0 0; padding: 0.65rem 0.95rem; border-radius: 14px; font-size: 0.95rem; }
+  .msg.err { background: var(--err-bg); color: var(--err); }
+  .msg.ok { color: var(--ok); padding-left: 0; }
+  .msg.note { color: var(--warn); padding-left: 0; }
+  .msg:empty { display: none; }
+
+  .progress { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin-top: 1rem; }
+  .progress > div { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--sage), var(--peach), var(--pink)); transition: width .2s; }
+
+  .results {
+    margin-top: 1rem; padding: 1.25rem 1.3rem; border-radius: 20px;
+    background: linear-gradient(135deg, var(--sage-soft), var(--peach-soft) 60%, var(--pink-soft));
+  }
+  .results h3 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 600; }
+  .results p { margin: 0.25rem 0 1rem; color: var(--ink); font-size: 0.925rem; max-width: 36rem; }
+  .fallback-links a { color: var(--sage-deep); font-weight: 600; margin-right: 1rem; }
+
+  details { margin-top: 1.25rem; background: var(--surface); border-radius: 22px; box-shadow: var(--shadow); padding: 1.1rem 1.5rem; }
+  summary { cursor: pointer; font-weight: 600; font-family: "Outfit", "DM Sans", sans-serif; font-size: 1.05rem; }
+  details p, details li { color: var(--ink-soft); font-size: 0.95rem; max-width: 40rem; }
+  code { font-size: 0.9em; background: var(--surface-2); padding: 0.05rem 0.35rem; border-radius: 6px; white-space: nowrap; }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+  @media (max-width: 600px) {
+    body { background: var(--bg); }
+    .wrap { padding: 1rem 0.75rem 3rem; }
+    .masthead { padding: 1.5rem 1.25rem 5rem; border-radius: 22px; }
+    .waves { height: 5rem; }
+    .dots { top: 1.4rem; right: 1.25rem; grid-template-columns: repeat(2, 11px); gap: 7px; }
+    .dots i { width: 11px; height: 11px; }
+    .masthead h1 { padding-right: 2.5rem; }
+    .privacy { border-radius: 16px; align-items: flex-start; }
+    .privacy svg { margin-top: 0.15rem; }
+    section.step { grid-template-columns: 1fr; padding: 1.1rem 1rem 1.25rem; border-radius: 20px; }
+    .step-num { margin-bottom: 0.15rem; }
+    .step-body { grid-column: 1; }
+    .toolbar { padding: 0.9rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <h1>Split and lock PDFs</h1>
+    <div class="rule" aria-hidden="true"></div>
+    <p class="lede">Turn one combined PDF into separate files, each protected with its own password. Useful for payslips, statements and letters.</p>
+    <svg class="waves" viewBox="0 0 800 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,70 C120,20 220,30 330,62 C450,98 560,40 680,38 C740,37 780,50 800,58 L800,140 L0,140 Z" fill="var(--wave-1)"/>
+      <path d="M0,98 C90,70 190,62 300,84 C420,108 520,74 640,72 C720,71 770,86 800,94 L800,140 L0,140 Z" fill="var(--wave-2)" opacity=".85"/>
+      <path d="M0,118 C110,96 230,100 350,114 C470,128 590,102 700,104 C750,105 780,112 800,116 L800,140 L0,140 Z" fill="var(--wave-3)" opacity=".9"/>
+    </svg>
+    <p class="privacy">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span>Your files never leave this device. Splitting and encryption run in your browser, and nothing is uploaded or saved.</span>
+    </p>
+  </header>
+
+  <main>
+    <section class="step" id="step1" aria-labelledby="h1-step">
+      <div class="step-num" aria-hidden="true">1</div>
+      <h2 id="h1-step">Choose the combined PDF</h2>
+      <div class="step-body">
+        <label class="drop" id="drop">
+          <input type="file" id="pdfInput" accept="application/pdf,.pdf">
+          <div><strong>Choose a PDF or drop it here</strong>
+          <span>The file is read on this device only.</span></div>
+        </label>
+        <div id="fileInfo"></div>
+        <div id="unlockBox" hidden>
+          <p class="hint">This PDF already has a password. Enter it to open the file.</p>
+          <div class="row">
+            <label class="sr-only" for="existingPw">Current password</label>
+            <input type="password" id="existingPw" style="max-width:16rem" autocomplete="off">
+            <button type="button" id="unlockBtn">Open PDF</button>
+          </div>
+        </div>
+        <p class="msg" id="loadMsg" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="step" id="step2" aria-labelledby="h2-step">
+      <div class="step-num" aria-hidden="true">2</div>
+      <h2 id="h2-step">Set up the files</h2>
+      <div class="step-body">
+        <p class="hint">Each row becomes one PDF. Pages can be single pages or ranges, like <code>1-3</code> or <code>1,4,6-7</code>. Rows without a name use the original file name and a number.</p>
+
+        <div class="toolbar">
+          <div class="row">
+            <span class="group-title">Quick split</span>
+            <label class="inline" for="everyN">One file every</label>
+            <input type="number" id="everyN" min="1" value="1">
+            <span>pages</span>
+            <button type="button" id="splitEveryBtn">Create rows</button>
+          </div>
+        </div>
+        <div class="toolbar" id="namingBar">
+          <div class="row">
+            <label class="group-title" for="namePreset">File names</label>
+            <select id="namePreset">
+              <option value="{name}">Name only</option>
+              <option value="{date}_{doc}_{name}">Date, document, name</option>
+              <option value="{doc}_{name}_{date}">Document, name, date</option>
+              <option value="{source}_{nn}">Original file name and number</option>
+              <option value="custom">Custom format</option>
+            </select>
+          </div>
+          <div class="naming-fields">
+            <label class="field" for="docType">Document type
+              <input type="text" id="docType" placeholder="e.g. Payslip" autocomplete="off">
+            </label>
+            <label class="field" for="docDate">Date
+              <input type="date" id="docDate">
+            </label>
+            <label class="field" for="dateFmt">Date style
+              <select id="dateFmt">
+                <option value="iso">YYYY-MM-DD</option>
+                <option value="compact">YYYYMMDD</option>
+                <option value="month">YYYY-MM</option>
+              </select>
+            </label>
+            <label class="field" for="spaceMode">Spaces in names
+              <select id="spaceMode">
+                <option value="-">Replace with -</option>
+                <option value="_">Replace with _</option>
+                <option value="keep">Keep spaces</option>
+              </select>
+            </label>
+          </div>
+          <div class="custom-row" id="customRow" hidden>
+            <label class="field" for="customPattern">Custom format
+              <input type="text" id="customPattern" value="{date}_{doc}_{name}" autocomplete="off" spellcheck="false">
+            </label>
+            <p class="tokens">Click to insert: <code data-token="{name}">{name}</code> <code data-token="{doc}">{doc}</code> <code data-token="{date}">{date}</code> <code data-token="{nn}">{nn}</code> for 01, 02 and so on, <code data-token="{pages}">{pages}</code> <code data-token="{source}">{source}</code></p>
+          </div>
+          <p class="name-example">First file saves as <b id="nameExample">—</b></p>
+        </div>
+        <div class="toolbar pw">
+          <div class="row">
+            <span class="group-title">Passwords</span>
+            <button type="button" id="genPwBtn">Generate a different one for each file</button>
+            <span>or use one for all</span>
+            <label class="sr-only" for="samePwInput">Password for every file</label>
+            <input type="text" id="samePwInput" autocomplete="off" spellcheck="false" placeholder="Type a password" style="max-width:12rem">
+            <button type="button" id="samePwBtn">Apply to all</button>
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col"><span class="sr-only">Row</span></th>
+                <th scope="col">Name</th>
+                <th scope="col">Pages</th>
+                <th scope="col">Password</th>
+                <th scope="col"><span class="sr-only">Remove</span></th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+
+        <div class="row" style="margin-top:0.75rem">
+          <button type="button" id="addRowBtn">Add row</button>
+          <label class="btn" for="csvInput" style="display:inline-block" tabindex="0" id="csvLabel">Import from CSV</label>
+          <input type="file" id="csvInput" accept=".csv,text/csv" class="sr-only">
+          <button type="button" id="templateBtn">Get CSV template</button>
+          <button type="button" class="quiet" id="clearBtn">Clear all rows</button>
+        </div>
+        <p class="msg" id="tableMsg" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="step" id="step3" aria-labelledby="h3-step">
+      <div class="step-num" aria-hidden="true">3</div>
+      <h2 id="h3-step">Create the locked files</h2>
+      <div class="step-body">
+        <p class="hint">Files are encrypted with AES-256 and bundled into one ZIP.</p>
+        <button type="button" class="primary" id="createBtn">Create locked files</button>
+        <div class="progress" id="progress" hidden><div></div></div>
+        <p class="msg" id="createMsg" role="status" aria-live="polite"></p>
+
+        <div class="results" id="results" hidden>
+          <h3 id="resultsTitle">Files ready</h3>
+          <p>Send each password separately from its file, for example by SMS or a different message. Keep the password list somewhere safe and delete it when you're done.</p>
+          <div class="row">
+            <button type="button" class="primary" id="saveZipBtn">Save ZIP</button>
+            <button type="button" id="savePwListBtn">Save password list</button>
+          </div>
+          <div class="fallback-links" id="fallbackLinks"></div>
+          <p class="msg" id="saveMsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <details>
+      <summary>How this works and what to know</summary>
+      <p>This page uses open-source libraries (pdf-lib, JSZip and Papa Parse) that run entirely in your browser. Your PDF, the page ranges and the passwords stay in this tab and are cleared when you close or reload it.</p>
+      <ul>
+        <li>Recipients need the password to open their file. Most PDF readers support AES-256, including Adobe Acrobat Reader, Chrome, Edge, and the built-in readers on iPhone and Android.</li>
+        <li>CSV files should have the columns <code>name</code>, <code>pages</code> and <code>password</code>. The password column can be left empty and filled in here.</li>
+        <li>File names follow the format you choose, with characters that aren't allowed in file names removed. If two files would get the same name, a number is added to the second.</li>
+        <li>Avoid passwords that others could easily know or guess, such as ID numbers or birthdays.</li>
+        <li>Fillable form fields and some interactive features in the original PDF may not carry over to the split files.</li>
+      </ul>
+    </details>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.11.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.2/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.7.0/papaparse.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const $ = (id) => document.getElementById(id);
+  const state = {
+    sourceBytes: null,
+    sourceName: "",
+    sourcePassword: null,
+    pageCount: 0,
+    rows: [],          // {name, pages, password}
+    naming: { pattern: "{name}", preset: "{name}", doc: "", date: "", dateFmt: "iso", spaces: "-" },
+    zipBlob: null,
+    zipName: "",
+    pwCsv: "",
+  };
+  let downloads = null;
+
+  // ---------- Capability: downloads ----------
+  const inFrame = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+  let downloadsPromise = null;
+  function getDownloads() {
+    if (downloads) return Promise.resolve(downloads);
+    if (!downloadsPromise) {
+      downloadsPromise = (async () => {
+        try {
+          if (window.claude && typeof window.claude.use === "function") {
+            downloads = (await window.claude.use("downloads")) || null;
+          }
+        } catch (e) { downloads = null; }
+        return downloads;
+      })();
+    }
+    return downloadsPromise;
+  }
+  getDownloads();
+
+  function showOpenInTab(msgEl, text) {
+    msgEl.className = "msg err";
+    msgEl.textContent = text + " ";
+    if (/^https?:$/.test(location.protocol)) {
+      const a = document.createElement("a");
+      a.href = location.href; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = "Open the tool in a new tab";
+      a.style.color = "inherit"; a.style.fontWeight = "600";
+      msgEl.appendChild(a);
+      msgEl.appendChild(document.createTextNode(" and create the files there. If the link doesn't open, copy this address into a new tab: "));
+      const addr = document.createElement("code");
+      addr.textContent = location.href;
+      addr.style.whiteSpace = "normal"; addr.style.overflowWrap = "anywhere"; addr.style.userSelect = "all";
+      msgEl.appendChild(addr);
+    } else {
+      msgEl.appendChild(document.createTextNode("Ask the person who shared this tool for the standalone web page version."));
+    }
+  }
+
+  function plainDownload(filename, data) {
+    const blob = data instanceof Blob ? data : new Blob([data]);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+
+  async function offerFile(filename, data, msgEl) {
+    msgEl.className = "msg"; msgEl.textContent = "";
+
+    // Opened directly in a browser tab: a normal download works
+    if (!inFrame) { plainDownload(filename, data); return; }
+
+    msgEl.className = "msg note";
+    msgEl.textContent = "Preparing the save…";
+    const dl = await getDownloads();
+    if (!dl) {
+      showOpenInTab(msgEl, "Saving files isn't available in this view.");
+      return;
+    }
+    msgEl.textContent = "Confirm the save in the prompt that appears.";
+    try {
+      await dl.save({ filename, data });
+      msgEl.className = "msg ok";
+      msgEl.textContent = "Saved " + filename + ". Check your downloads folder.";
+    } catch (err) {
+      const code = (err && err.code) || "unavailable";
+      if (code === "declined") {
+        msgEl.className = "msg note";
+        msgEl.textContent = "Save cancelled. Select the button again when you're ready.";
+        return;
+      }
+      if (code === "rate_limited") {
+        msgEl.className = "msg note";
+        msgEl.textContent = "A save prompt is already open. Finish that one first.";
+        return;
+      }
+      if (code === "too_large") {
+        msgEl.className = "msg err";
+        msgEl.textContent = "This file is too large to save here. Split the PDF into smaller batches and try again.";
+        return;
+      }
+      console.error("Save failed:", err);
+      showOpenInTab(msgEl, "This view blocked the save (" + code + ").");
+    }
+  }
+
+  // ---------- Helpers ----------
+  function setMsg(el, text, kind) {
+    el.className = "msg" + (kind ? " " + kind : "");
+    el.textContent = text || "";
+  }
+
+  function libsReady() {
+    return window.PDFLib && window.JSZip && window.Papa;
+  }
+
+  function parsePages(spec, total) {
+    const s = String(spec || "").replace(/\s+/g, "");
+    if (!s) throw new Error("Pages are empty");
+    const out = [];
+    for (const part of s.split(",")) {
+      if (!part) continue;
+      const m = part.match(/^(\d+)(?:-(\d+))?$/);
+      if (!m) throw new Error("\"" + part + "\" isn't a page or range");
+      const a = parseInt(m[1], 10), b = m[2] ? parseInt(m[2], 10) : a;
+      if (a < 1 || b < 1) throw new Error("Pages start at 1");
+      if (b < a) throw new Error("Range " + part + " runs backwards");
+      if (b > total) throw new Error("Page " + b + " is beyond the last page (" + total + ")");
+      for (let i = a; i <= b; i++) out.push(i - 1);
+    }
+    if (!out.length) throw new Error("Pages are empty");
+    return out;
+  }
+
+  const PW_CHARS = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  function randomPassword() {
+    const bytes = new Uint32Array(12);
+    crypto.getRandomValues(bytes);
+    let s = "";
+    for (let i = 0; i < 12; i++) {
+      s += PW_CHARS[bytes[i] % PW_CHARS.length];
+      if (i === 3 || i === 7) s += "-";
+    }
+    return s;
+  }
+  function randomOwnerPassword() {
+    const b = new Uint8Array(24);
+    crypto.getRandomValues(b);
+    return Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
+  }
+
+  function safeFileName(name, fallback) {
+    let n = String(name || "").replace(/\.pdf$/i, "");
+    n = n.replace(/[\\/:*?"<>|\u0000-\u001f]/g, " ").replace(/\s+/g, " ").trim();
+    if (!n) n = fallback;
+    return n.slice(0, 120);
+  }
+
+  function baseName() {
+    return safeFileName(state.sourceName, "document");
+  }
+
+  function todayISO() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  function formatDate(iso, fmt) {
+    if (!iso) return "";
+    const [y, m, d] = iso.split("-");
+    if (fmt === "compact") return y + m + d;
+    if (fmt === "month") return y + "-" + m;
+    return y + "-" + m + "-" + d;
+  }
+
+  function cleanFileName(raw, spaces) {
+    let n = String(raw || "").replace(/\.pdf$/i, "");
+    n = n.replace(/[\\/:*?"<>|\u0000-\u001f]/g, " ");
+    n = n.replace(/\s+/g, " ").trim();
+    if (spaces !== "keep") n = n.replace(/ /g, spaces);
+    n = n.replace(/[-_ ]{2,}/g, (m) => m.trim().charAt(0) || " ");
+    n = n.replace(/^[-_. ]+|[-_. ]+$/g, "");
+    return n.slice(0, 150);
+  }
+
+  function fileNameFor(r, i) {
+    const nm = state.naming;
+    const width = Math.max(2, String(state.rows.length).length);
+    const nn = String(i + 1).padStart(width, "0");
+    const values = {
+      name: String(r.name || "").trim(),
+      doc: nm.doc.trim(),
+      date: formatDate(nm.date, nm.dateFmt),
+      nn: nn,
+      n: String(i + 1),
+      pages: String(r.pages || "").replace(/\s+/g, ""),
+      source: baseName(),
+    };
+    let pattern = nm.pattern || "{name}";
+    // A row with no name falls back to the original file name and number
+    if (!values.name && /\{name\}/.test(pattern)) {
+      pattern = pattern.replace(/\{name\}/g, /\{source\}|\{nn\}/.test(pattern) ? "" : "{source}_{nn}");
+    }
+    const filled = pattern.replace(/\{(name|doc|date|nn|n|pages|source)\}/g, (_, k) => values[k]);
+    return cleanFileName(filled, nm.spaces) || cleanFileName(values.source + "_" + nn, nm.spaces);
+  }
+
+  function assignFileNames() {
+    const seen = new Map();
+    state.rows.forEach((r, i) => {
+      const fn = fileNameFor(r, i);
+      const key = fn.toLowerCase();
+      const count = seen.get(key) || 0;
+      seen.set(key, count + 1);
+      r._file = count ? fn + "_" + (count + 1) : fn;
+    });
+  }
+
+  function updatePreviews() {
+    assignFileNames();
+    const tbody = $("rows");
+    state.rows.forEach((r, i) => {
+      const el = tbody.querySelector('tr[data-index="' + i + '"] .saves-as');
+      if (el) el.textContent = "Saves as " + r._file + ".pdf";
+    });
+    $("nameExample").textContent = state.rows.length ? state.rows[0]._file + ".pdf" : "(add a PDF and rows to see an example)";
+  }
+
+  function csvEscape(v) {
+    const s = String(v == null ? "" : v);
+    return /[",\n\r]/.test(s) ? "\"" + s.replace(/"/g, "\"\"") + "\"" : s;
+  }
+
+  // ---------- Step 1: load PDF ----------
+  const drop = $("drop");
+  ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", (e) => {
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) loadFile(f);
+  });
+  $("pdfInput").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (f) loadFile(f);
+    e.target.value = "";
+  });
+
+  async function loadFile(file) {
+    const msg = $("loadMsg");
+    setMsg(msg, "");
+    $("unlockBox").hidden = true;
+    if (!libsReady()) { setMsg(msg, "The PDF tools didn't load. Check your connection and reload the page.", "err"); return; }
+    if (!/\.pdf$/i.test(file.name) && file.type !== "application/pdf") {
+      setMsg(msg, "That file isn't a PDF. Choose a file ending in .pdf.", "err"); return;
+    }
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      state.sourceBytes = bytes;
+      state.sourceName = file.name;
+      state.sourcePassword = null;
+      await openSource();
+    } catch (err) {
+      console.error(err);
+      setMsg(msg, "This PDF couldn't be read. It may be damaged or not a real PDF.", "err");
+    }
+  }
+
+  async function openSource() {
+    const msg = $("loadMsg");
+    const { PDFDocument } = window.PDFLib;
+    let doc;
+    try {
+      const opts = state.sourcePassword != null ? { password: state.sourcePassword } : {};
+      doc = await PDFDocument.load(state.sourceBytes, opts);
+    } catch (err) {
+      const text = String(err && err.message || err);
+      if (/encrypt|password/i.test(text)) {
+        $("unlockBox").hidden = false;
+        if (state.sourcePassword != null) setMsg(msg, "That password didn't open the PDF. Check it and try again.", "err");
+        $("existingPw").focus();
+        return null;
+      }
+      throw err;
+    }
+    state.pageCount = doc.getPageCount();
+    $("unlockBox").hidden = true;
+    renderFileInfo();
+    $("step1").classList.add("done");
+    if (!state.rows.length) {
+      $("everyN").value = 1;
+      buildEveryN(1);
+    } else {
+      renderRows();
+    }
+    return doc;
+  }
+
+  $("unlockBtn").addEventListener("click", async () => {
+    state.sourcePassword = $("existingPw").value;
+    try { await openSource(); } catch (e) { setMsg($("loadMsg"), "This PDF couldn't be read.", "err"); }
+  });
+  $("existingPw").addEventListener("keydown", (e) => { if (e.key === "Enter") $("unlockBtn").click(); });
+
+  function renderFileInfo() {
+    const box = $("fileInfo");
+    box.innerHTML = "";
+    const chip = document.createElement("div");
+    chip.className = "file-chip";
+    const ring = document.createElement("div"); ring.className = "ring"; ring.setAttribute("aria-hidden", "true");
+    ring.textContent = state.pageCount;
+    const meta = document.createElement("div"); meta.className = "meta";
+    const b = document.createElement("b"); b.textContent = state.sourceName;
+    const p = document.createElement("span"); p.className = "pages";
+    p.textContent = state.pageCount + (state.pageCount === 1 ? " page" : " pages");
+    meta.append(b, p);
+    chip.append(ring, meta);
+    box.appendChild(chip);
+  }
+
+  // ---------- Step 2: rows ----------
+  function renderRows() {
+    const tbody = $("rows");
+    tbody.innerHTML = "";
+    if (!state.rows.length) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 5; td.className = "empty";
+      td.textContent = state.pageCount
+        ? "No files set up yet. Use Quick split, add rows, or import a CSV."
+        : "Choose a PDF first, then set up the files here.";
+      tr.appendChild(td); tbody.appendChild(tr);
+      updatePreviews();
+      return;
+    }
+    state.rows.forEach((r, i) => {
+      const tr = document.createElement("tr");
+
+      const tdN = document.createElement("td"); tdN.className = "n"; tdN.dataset.n = i + 1;
+      const nSr = document.createElement("span"); nSr.className = "sr-only"; nSr.textContent = "Row " + (i + 1); tdN.appendChild(nSr);
+
+      const tdName = document.createElement("td");
+      const inName = document.createElement("input");
+      inName.type = "text"; inName.value = r.name; inName.placeholder = "Recipient or label";
+      inName.setAttribute("aria-label", "Name for row " + (i + 1));
+      inName.addEventListener("input", () => { r.name = inName.value; invalidateResults(); updatePreviews(); });
+      const savesAs = document.createElement("div");
+      savesAs.className = "saves-as";
+      tdName.append(inName, savesAs);
+
+      const tdPages = document.createElement("td"); tdPages.className = "pages-cell";
+      const inPages = document.createElement("input");
+      inPages.type = "text"; inPages.value = r.pages; inPages.inputMode = "numeric";
+      inPages.setAttribute("aria-label", "Pages for row " + (i + 1));
+      inPages.addEventListener("input", () => { r.pages = inPages.value; inPages.classList.remove("invalid"); invalidateResults(); updatePreviews(); });
+      tdPages.appendChild(inPages);
+
+      const tdPw = document.createElement("td"); tdPw.className = "pw-cell";
+      const inPw = document.createElement("input");
+      inPw.type = "text"; inPw.value = r.password; inPw.autocomplete = "off"; inPw.spellcheck = false;
+      inPw.setAttribute("aria-label", "Password for row " + (i + 1));
+      inPw.addEventListener("input", () => { r.password = inPw.value; inPw.classList.remove("invalid"); invalidateResults(); });
+      tdPw.appendChild(inPw);
+
+      const tdAct = document.createElement("td"); tdAct.className = "act";
+      const del = document.createElement("button");
+      del.type = "button"; del.className = "quiet"; del.textContent = "Remove";
+      del.setAttribute("aria-label", "Remove row " + (i + 1));
+      del.addEventListener("click", () => { state.rows.splice(i, 1); invalidateResults(); renderRows(); });
+      tdAct.appendChild(del);
+
+      tr.append(tdN, tdName, tdPages, tdPw, tdAct);
+      tr.dataset.index = i;
+      tbody.appendChild(tr);
+    });
+    $("step2").classList.toggle("done", state.rows.length > 0);
+    updatePreviews();
+  }
+
+  function buildEveryN(n) {
+    const total = state.pageCount;
+    const rows = [];
+    let k = 1;
+    for (let start = 1; start <= total; start += n) {
+      const end = Math.min(start + n - 1, total);
+      rows.push({
+        name: "",
+        pages: start === end ? String(start) : start + "-" + end,
+        password: "",
+      });
+      k++;
+    }
+    state.rows = rows;
+    invalidateResults();
+    renderRows();
+  }
+
+  $("splitEveryBtn").addEventListener("click", () => {
+    const msg = $("tableMsg");
+    if (!state.pageCount) { setMsg(msg, "Choose a PDF first.", "err"); return; }
+    const n = parseInt($("everyN").value, 10);
+    if (!Number.isFinite(n) || n < 1) { setMsg(msg, "Enter a whole number of pages, 1 or more.", "err"); return; }
+    const hadPasswords = state.rows.some((r) => r.password);
+    buildEveryN(n);
+    setMsg(msg, "Created " + state.rows.length + " rows." + (hadPasswords ? " Passwords were cleared, so generate or enter them again." : ""), "ok");
+  });
+
+  $("genPwBtn").addEventListener("click", () => {
+    const msg = $("tableMsg");
+    if (!state.rows.length) { setMsg(msg, "Add rows first, then generate passwords.", "err"); return; }
+    state.rows.forEach((r) => { r.password = randomPassword(); });
+    invalidateResults(); renderRows();
+    setMsg(msg, "Generated passwords. You'll get a password list with the files.", "ok");
+  });
+
+  $("samePwBtn").addEventListener("click", () => {
+    const msg = $("tableMsg");
+    if (!state.rows.length) { setMsg(msg, "Add rows first.", "err"); return; }
+    const pw = $("samePwInput").value;
+    if (!pw) { setMsg(msg, "Type a password first, then apply it.", "err"); $("samePwInput").focus(); return; }
+    state.rows.forEach((r) => { r.password = pw; });
+    invalidateResults(); renderRows();
+    setMsg(msg, "Every file will use the same password." + (pw.length < 8 ? " Consider a longer one, at least 8 characters." : ""), pw.length < 8 ? "note" : "ok");
+  });
+
+  $("addRowBtn").addEventListener("click", () => {
+    const n = state.rows.length + 1;
+    state.rows.push({ name: "", pages: "", password: "" });
+    invalidateResults(); renderRows();
+    const inputs = $("rows").querySelectorAll("tr:last-child input");
+    if (inputs[0]) inputs[0].focus();
+  });
+
+  $("clearBtn").addEventListener("click", () => {
+    if (!state.rows.length) return;
+    state.rows = []; invalidateResults(); renderRows(); setMsg($("tableMsg"), "Removed all rows.", "ok");
+  });
+
+  $("csvLabel").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("csvInput").click(); }
+  });
+  $("csvInput").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!f) return;
+    const msg = $("tableMsg");
+    if (!window.Papa) { setMsg(msg, "The CSV reader didn't load. Reload the page.", "err"); return; }
+    window.Papa.parse(f, {
+      header: true,
+      skipEmptyLines: "greedy",
+      transformHeader: (h) => h.trim().toLowerCase(),
+      complete: (res) => {
+        const fields = (res.meta.fields || []);
+        const pick = (cands) => fields.find((h) => cands.includes(h));
+        const kName = pick(["name", "file name", "filename", "file"]);
+        const kPages = pick(["pages", "page", "page range", "range"]);
+        const kPw = pick(["password", "pw", "pass"]);
+        if (!kPages) { setMsg(msg, "The CSV needs a \"pages\" column. Get the template to see the format.", "err"); return; }
+        const rows = res.data.map((d, i) => ({
+          name: kName ? String(d[kName] || "").trim() : "",
+          pages: String(d[kPages] || "").trim(),
+          password: kPw ? String(d[kPw] || "") : "",
+        })).filter((r) => r.pages || r.name);
+        if (!rows.length) { setMsg(msg, "The CSV has no rows.", "err"); return; }
+        state.rows = rows; invalidateResults(); renderRows();
+        const missingPw = rows.filter((r) => !r.password).length;
+        setMsg(msg, "Imported " + rows.length + " rows, replacing the previous ones." + (missingPw ? " " + missingPw + " have no password yet." : ""), missingPw ? "note" : "ok");
+      },
+      error: () => setMsg(msg, "The CSV couldn't be read.", "err"),
+    });
+  });
+
+  $("templateBtn").addEventListener("click", () => {
+    const csv = "name,pages,password\r\nRecipient A,1-2,\r\nRecipient B,3,\r\nRecipient C,4-5,\r\n";
+    offerFile("split-and-lock-template.csv", csv, $("tableMsg"));
+  });
+
+  // ---------- Step 3: create ----------
+  function invalidateResults() {
+    if (!state.zipBlob) return;
+    state.zipBlob = null; state.pwCsv = "";
+    $("results").hidden = true;
+    $("fallbackLinks").innerHTML = "";
+    $("step3").classList.remove("done");
+    setMsg($("createMsg"), "Setup changed. Create the files again to include your changes.", "note");
+  }
+
+  function validate() {
+    const problems = [];
+    const tbody = $("rows");
+    state.rows.forEach((r, i) => {
+      const tr = tbody.querySelector('tr[data-index="' + i + '"]');
+      const inputs = tr ? tr.querySelectorAll("input") : [];
+      try { r._indexes = parsePages(r.pages, state.pageCount); }
+      catch (e) { problems.push("Row " + (i + 1) + ": " + e.message + "."); if (inputs[1]) inputs[1].classList.add("invalid"); }
+      if (!r.password) { problems.push("Row " + (i + 1) + ": password is empty."); if (inputs[2]) inputs[2].classList.add("invalid"); }
+    });
+    assignFileNames();
+    return problems;
+  }
+
+  $("createBtn").addEventListener("click", async () => {
+    const msg = $("createMsg");
+    const btn = $("createBtn");
+    setMsg(msg, "");
+    if (!libsReady()) { setMsg(msg, "The PDF tools didn't load. Check your connection and reload the page.", "err"); return; }
+    if (!state.sourceBytes || !state.pageCount) { setMsg(msg, "Choose a PDF in step 1 first.", "err"); return; }
+    if (!state.rows.length) { setMsg(msg, "Set up at least one file in step 2.", "err"); return; }
+    const problems = validate();
+    if (problems.length) {
+      const extra = problems.length > 4 ? " And " + (problems.length - 4) + " more." : "";
+      setMsg(msg, "Fix these before creating the files: " + problems.slice(0, 4).join(" ") + extra, "err");
+      return;
+    }
+
+    btn.disabled = true;
+    const bar = $("progress"); bar.hidden = false;
+    const fill = bar.firstElementChild; fill.style.width = "0%";
+    $("results").hidden = true;
+    $("fallbackLinks").innerHTML = "";
+
+    try {
+      const { PDFDocument } = window.PDFLib;
+      const opts = state.sourcePassword != null ? { password: state.sourcePassword } : {};
+      const src = await PDFDocument.load(state.sourceBytes, opts);
+      const zip = new window.JSZip();
+      const lines = ["name,file,pages,password"];
+      const total = state.rows.length;
+
+      for (let i = 0; i < total; i++) {
+        const r = state.rows[i];
+        setMsg(msg, "Creating file " + (i + 1) + " of " + total + "…");
+        const out = await PDFDocument.create();
+        const pages = await out.copyPages(src, r._indexes);
+        pages.forEach((p) => out.addPage(p));
+        out.encrypt({
+          userPassword: r.password,
+          ownerPassword: randomOwnerPassword(),
+          permissions: { printing: "highResolution", copying: true, contentAccessibility: true, modifying: false, annotating: false, fillingForms: true, documentAssembly: false },
+        });
+        const bytes = await out.save();
+        zip.file(r._file + ".pdf", bytes);
+        lines.push([r.name, r._file + ".pdf", r.pages, r.password].map(csvEscape).join(","));
+        fill.style.width = Math.round(((i + 1) / total) * 90) + "%";
+        await new Promise((res) => setTimeout(res, 0));
+      }
+
+      setMsg(msg, "Packing the ZIP…");
+      state.zipBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } });
+      state.zipName = baseName() + "-locked.zip";
+      state.pwCsv = lines.join("\r\n") + "\r\n";
+      fill.style.width = "100%";
+
+      $("resultsTitle").textContent = total + (total === 1 ? " file ready" : " files ready");
+      $("results").hidden = false;
+      $("step3").classList.add("done");
+      setMsg(msg, "");
+      setMsg($("saveMsg"), "");
+      $("saveZipBtn").focus();
+    } catch (err) {
+      console.error(err);
+      setMsg(msg, "Something went wrong while creating the files: " + (err && err.message ? err.message : err), "err");
+    } finally {
+      btn.disabled = false;
+      setTimeout(() => { bar.hidden = true; }, 600);
+    }
+  });
+
+  $("saveZipBtn").addEventListener("click", () => {
+    if (state.zipBlob) offerFile(state.zipName, state.zipBlob, $("saveMsg"));
+  });
+  $("savePwListBtn").addEventListener("click", () => {
+    if (state.pwCsv) offerFile(baseName() + "-passwords.csv", state.pwCsv, $("saveMsg"));
+  });
+
+  // ---------- File naming controls ----------
+  $("docDate").value = todayISO();
+  state.naming.date = $("docDate").value;
+
+  function syncNamingFields() {
+    const pat = state.naming.pattern;
+    const usesDoc = /\{doc\}/.test(pat), usesDate = /\{date\}/.test(pat);
+    $("docType").disabled = !usesDoc;
+    $("docDate").disabled = !usesDate;
+    $("dateFmt").disabled = !usesDate;
+  }
+
+  function readNaming() {
+    const preset = $("namePreset").value;
+    state.naming.preset = preset;
+    state.naming.pattern = preset === "custom" ? $("customPattern").value : preset;
+    state.naming.doc = $("docType").value;
+    state.naming.date = $("docDate").value;
+    state.naming.dateFmt = $("dateFmt").value;
+    state.naming.spaces = $("spaceMode").value;
+    $("customRow").hidden = preset !== "custom";
+    syncNamingFields();
+    invalidateResults();
+    updatePreviews();
+  }
+  ["namePreset", "dateFmt", "spaceMode", "docDate"].forEach((id) => $(id).addEventListener("change", readNaming));
+  ["docType", "customPattern", "docDate"].forEach((id) => $(id).addEventListener("input", readNaming));
+  $("namePreset").addEventListener("change", () => {
+    if ($("namePreset").value === "custom") $("customPattern").focus();
+  });
+  document.querySelectorAll(".tokens code[data-token]").forEach((c) => {
+    c.tabIndex = 0;
+    c.setAttribute("role", "button");
+    const insert = () => {
+      const inp = $("customPattern");
+      const start = inp.selectionStart != null ? inp.selectionStart : inp.value.length;
+      const end = inp.selectionEnd != null ? inp.selectionEnd : inp.value.length;
+      inp.value = inp.value.slice(0, start) + c.dataset.token + inp.value.slice(end);
+      inp.focus();
+      const pos = start + c.dataset.token.length;
+      inp.setSelectionRange(pos, pos);
+      readNaming();
+    };
+    c.addEventListener("click", insert);
+    c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); insert(); } });
+  });
+
+  syncNamingFields();
+  renderRows();
+
+  // If the libraries fail to load, say so early
+  window.addEventListener("load", () => {
+    if (!libsReady()) setMsg($("loadMsg"), "The PDF tools didn't load. Check your connection and reload the page.", "err");
+  });
+})();
+</script>
+</body>
+</html>
