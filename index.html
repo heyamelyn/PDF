@@ -246,7 +246,7 @@
   }
   .naming-fields { margin-top: 0.9rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: 0.75rem 0.9rem; }
   .field { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.875rem; color: var(--ink-soft); min-width: 0; }
-  .field input, .field select { color: var(--ink); font-size: 1rem; }
+  .field input, .field select { color: var(--ink); font-size: 1rem; min-height: 2.6rem; }
   .field input:disabled, .field select:disabled { opacity: 0.45; cursor: not-allowed; }
   .custom-row { margin-top: 0.9rem; }
   .custom-row .field { max-width: 28rem; }
@@ -257,7 +257,7 @@
   .name-example b { color: var(--ink); font-weight: 600; }
 
   .table-scroll { position: relative; overflow-x: auto; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
-  table { border-collapse: collapse; width: 100%; min-width: 68rem; }
+  table { border-collapse: collapse; width: 100%; min-width: 70rem; }
   th, td { padding: 0.55rem 0.65rem; text-align: left; vertical-align: top; }
   th { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); background: var(--surface-2); }
   tbody tr + tr td { border-top: 1px solid var(--line); }
@@ -305,11 +305,15 @@
     padding: 0.6rem 0.75rem; width: 100%; min-height: 11.5rem; resize: vertical; line-height: 1.5;
   }
   #emailBar { background: var(--pink-soft); margin-bottom: 1.1rem; }
+  #extractBar { background: var(--surface-2); }
+  .extract-fields { grid-template-columns: minmax(12rem, 1.2fr) minmax(10rem, 1fr) auto; align-items: end; }
+  .extract-go button { white-space: nowrap; }
+  @media (max-width: 600px) { .extract-fields { grid-template-columns: 1fr; } .extract-go > span { display: none; } }
   #emailBar .naming-fields { grid-template-columns: minmax(0, 3fr) minmax(7rem, 1fr); }
   #emailBar .naming-fields + .field { margin-top: 0.75rem; }
   .bar-note { color: var(--ink-soft); font-size: 0.9rem; }
   td.email-cell { width: 14rem; }
-  td.inv-cell { width: 8rem; }
+  td.inv-cell { width: 10.5rem; }
   td.amt-cell { width: 7.5rem; }
   td.name-cell { width: 14rem; min-width: 12rem; }
 
@@ -414,6 +418,28 @@
             <span>pages</span>
             <button type="button" id="splitEveryBtn">Apply</button>
           </div>
+        </div>
+        <div class="toolbar" id="extractBar">
+          <div class="row">
+            <span class="group-title">Invoice numbers</span>
+            <span class="bar-note">Read them from the text on each file's pages.</span>
+          </div>
+          <div class="naming-fields extract-fields">
+            <label class="field" for="extractMode">Find by
+              <select id="extractMode">
+                <option value="label">The label before the number</option>
+                <option value="example">An example number</option>
+              </select>
+            </label>
+            <label class="field" for="extractValue"><span id="extractValueLabel">Label</span>
+              <input type="text" id="extractValue" value="Invoice No" autocomplete="off" spellcheck="false">
+            </label>
+            <div class="field extract-go">
+              <span aria-hidden="true">&nbsp;</span>
+              <button type="button" id="extractBtn">Find in PDF</button>
+            </div>
+          </div>
+          <p class="tokens" id="extractHint">Example: if the invoice says <code>Invoice No: INV-2026-0001</code>, the label is <code>Invoice No</code>. Works with PDFs that contain text, not scanned images.</p>
         </div>
         <div class="toolbar" id="namingBar">
           <div class="row">
@@ -558,6 +584,7 @@ Thank you.</textarea>
       <p>This page uses open-source libraries (pdf-lib, JSZip and Papa Parse) that run entirely in your browser. Your PDF, the page ranges and the passwords stay in this tab and are cleared when you close or reload it.</p>
       <ul>
         <li>Recipients need the password to open their file. Most PDF readers support AES-256, including Adobe Acrobat Reader, Chrome, Edge, and the built-in readers on iPhone and Android.</li>
+        <li>Invoice numbers can be read from the PDF's text. Always check them before sending, especially rows the tool highlights. Scanned PDFs have no readable text, so their numbers need to be typed in.</li>
         <li>CSV files can have the columns <code>name</code>, <code>email</code>, <code>invoice</code>, <code>amount</code>, <code>pages</code> and <code>password</code>. Only <code>pages</code> is required.</li>
         <li>Email with PDF creates an email file with the locked PDF attached. Classic Outlook for Windows and Apple Mail open it as a new message ready to send. Other email apps may open it as a received message instead, so test one first.</li>
         <li>The tool never sends email itself. You review and send each message from your own email app.</li>
@@ -710,8 +737,9 @@ Thank you.</textarea>
     }
     return s;
   }
+  // Random owner password; kept short because the AES-256 key derivation runs in JavaScript and scales with length
   function randomOwnerPassword() {
-    const b = new Uint8Array(24);
+    const b = new Uint8Array(10);
     crypto.getRandomValues(b);
     return Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
   }
@@ -901,6 +929,7 @@ Thank you.</textarea>
     inp.setAttribute("aria-label", opts.label);
     inp.addEventListener("input", () => {
       r[field] = inp.value;
+      if (field === "invoice") r._invAuto = false;
       inp.classList.remove("invalid");
       invalidateResults();
       if (opts.preview) updatePreviews();
@@ -1083,6 +1112,176 @@ Thank you.</textarea>
     offerFile("split-and-lock-template.csv", csv, $("tableMsg"));
   });
 
+  // ---------- Read invoice numbers from the PDF ----------
+  const PDFJS_BASE = "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/legacy/build/";
+  let pdfjsPromise = null;
+  function loadPdfJs() {
+    if (!pdfjsPromise) {
+      pdfjsPromise = (async () => {
+        const [lib, worker] = await Promise.all([
+          import(PDFJS_BASE + "pdf.min.mjs"),
+          import(PDFJS_BASE + "pdf.worker.min.mjs"),
+        ]);
+        // Run the PDF reader on the page itself; no separate worker file is needed
+        globalThis.pdfjsWorker = worker;
+        return lib;
+      })().catch((err) => { pdfjsPromise = null; throw err; });
+    }
+    return pdfjsPromise;
+  }
+
+  const pageTextCache = { key: null, texts: [] };
+
+  async function getPageTexts(indexes, onProgress) {
+    const key = state.sourceName + ":" + state.sourceBytes.length + ":" + state.pageCount;
+    if (pageTextCache.key !== key) { pageTextCache.key = key; pageTextCache.texts = []; }
+    const needed = [...new Set(indexes)].filter((i) => pageTextCache.texts[i] == null).sort((a, b) => a - b);
+    if (!needed.length) return pageTextCache.texts;
+    const lib = await loadPdfJs();
+    const task = lib.getDocument({
+      data: state.sourceBytes.slice(),
+      password: state.sourcePassword != null ? state.sourcePassword : undefined,
+      isEvalSupported: false,
+      disableFontFace: true,
+      stopAtErrors: false,
+    });
+    const doc = await task.promise;
+    try {
+      for (let k = 0; k < needed.length; k++) {
+        const i = needed[k];
+        const page = await doc.getPage(i + 1);
+        const content = await page.getTextContent();
+        pageTextCache.texts[i] = content.items.map((it) => (it.str || "") + (it.hasEOL ? "\n" : " ")).join("");
+        page.cleanup();
+        if (onProgress) onProgress(k + 1, needed.length);
+        if (k % 5 === 4) await new Promise((res) => setTimeout(res, 0));
+      }
+    } finally {
+      await task.destroy();
+    }
+    return pageTextCache.texts;
+  }
+
+  const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const NUMBER_TOKEN = "([A-Za-z0-9][A-Za-z0-9\\-\\/_.]*\\d[A-Za-z0-9\\-\\/_]*|\\d)";
+  const COMMON_LABELS = ["Invoice No", "Invoice Number", "Invoice #", "Tax Invoice No", "Inv No"];
+
+  function labelRegex(label) {
+    const words = label.trim().replace(/[.:#]+$/g, "").split(/\s+/).map(escapeRe);
+    return new RegExp(words.join("[\\s.]*") + "[\\s.]*(?:no\\.?|number|#)?\\s*[:#\\-–]?\\s*" + NUMBER_TOKEN, "gi");
+  }
+
+  function exampleRegex(example) {
+    let body = "";
+    const ex = example.trim();
+    for (let i = 0; i < ex.length; i++) {
+      const c = ex[i];
+      if (/\d/.test(c)) {
+        while (i + 1 < ex.length && /\d/.test(ex[i + 1])) i++;
+        body += "\\d+";
+      } else if (/[A-Za-z]/.test(c)) {
+        body += "[" + c.toUpperCase() + c.toLowerCase() + "]";
+      } else if (/\s/.test(c)) {
+        body += "\\s*";
+      } else {
+        body += escapeRe(c);
+      }
+    }
+    return new RegExp("(?<![A-Za-z0-9])(" + body + ")(?![A-Za-z0-9])", "g");
+  }
+
+  function findNumbers(text, mode, value) {
+    const found = [];
+    const collect = (re) => { for (const m of text.matchAll(re)) found.push(m[1].replace(/[.\-\/_]+$/, "")); };
+    if (mode === "example") {
+      collect(exampleRegex(value));
+    } else {
+      collect(labelRegex(value));
+      if (!found.length) {
+        for (const l of COMMON_LABELS) {
+          if (l.toLowerCase() === value.trim().toLowerCase()) continue;
+          collect(labelRegex(l));
+          if (found.length) break;
+        }
+      }
+    }
+    return [...new Set(found)];
+  }
+
+  function syncExtractFields() {
+    const mode = $("extractMode").value;
+    $("extractValueLabel").textContent = mode === "example" ? "Example number" : "Label";
+    const inp = $("extractValue");
+    if (mode === "example" && (inp.value === "Invoice No" || !inp.value)) inp.value = "INV-0001";
+    if (mode === "label" && (inp.value === "INV-0001" || !inp.value)) inp.value = "Invoice No";
+    inp.placeholder = mode === "example" ? "e.g. INV-2026-0001" : "e.g. Invoice No";
+    $("extractHint").innerHTML = mode === "example"
+      ? "Type one real invoice number from the PDF. The tool looks for numbers with the same shape, where letters and symbols match and digits can vary. Works with PDFs that contain text, not scanned images."
+      : "Example: if the invoice says <code>Invoice No: INV-2026-0001</code>, the label is <code>Invoice No</code>. Works with PDFs that contain text, not scanned images.";
+  }
+  $("extractMode").addEventListener("change", syncExtractFields);
+
+  $("extractBtn").addEventListener("click", async () => {
+    const msg = $("tableMsg");
+    const btn = $("extractBtn");
+    if (!state.sourceBytes || !state.pageCount) { setMsg(msg, "Choose a PDF first.", "err"); return; }
+    if (!state.rows.length) { setMsg(msg, "Set up the files first, for example with Quick split.", "err"); return; }
+    const mode = $("extractMode").value;
+    const value = $("extractValue").value.trim();
+    if (!value) { setMsg(msg, mode === "example" ? "Type an example invoice number first." : "Type the label that appears before the invoice number.", "err"); return; }
+    if (mode === "example" && !/\d/.test(value)) { setMsg(msg, "The example needs at least one digit, like INV-0001.", "err"); return; }
+
+    const ranges = [];
+    const badRows = [];
+    state.rows.forEach((r, i) => {
+      try { ranges[i] = parsePages(r.pages, state.pageCount); } catch (e) { badRows.push(i + 1); }
+    });
+    if (badRows.length) { setMsg(msg, "Fix the page ranges first (rows " + badRows.slice(0, 5).join(", ") + (badRows.length > 5 ? " and more" : "") + ").", "err"); return; }
+
+    btn.disabled = true;
+    setMsg(msg, "Loading the PDF reader…", "note");
+    try {
+      const texts = await getPageTexts(ranges.flat(), (done, total) => {
+        setMsg(msg, "Reading page " + done + " of " + total + "…", "note");
+      });
+      if (texts.filter((t) => t && t.trim()).length === 0) {
+        setMsg(msg, "No text was found in this PDF. It may be a scanned image, so invoice numbers need to be typed in.", "err");
+        return;
+      }
+      let found = 0;
+      const missing = [], multiple = [];
+      state.rows.forEach((r, i) => {
+        const text = ranges[i].map((p) => texts[p] || "").join("\n");
+        const nums = findNumbers(text, mode, value);
+        r._extract = "";
+        if (nums.length === 1) { r.invoice = nums[0]; r._invAuto = true; found++; }
+        else if (nums.length > 1) { r.invoice = nums[0]; r._invAuto = true; found++; multiple.push(i + 1); r._extract = "multiple"; }
+        else {
+          // Clear numbers filled by an earlier search, but keep ones typed by hand
+          if (r._invAuto) { r.invoice = ""; r._invAuto = false; }
+          missing.push(i + 1); r._extract = "missing";
+        }
+      });
+      invalidateResults();
+      renderRows();
+      state.rows.forEach((r, i) => {
+        if (!r._extract) return;
+        const inp = $("rows").querySelector('tr[data-index="' + i + '"] input[data-field="invoice"]');
+        if (inp) inp.classList.add("invalid");
+      });
+      const list = (a) => (a.length === 1 ? "row " : "rows ") + a.slice(0, 8).join(", ") + (a.length > 8 ? " and " + (a.length - 8) + " more" : "");
+      let text = "Found invoice numbers for " + found + " of " + state.rows.length + " files.";
+      if (multiple.length) text += " " + list(multiple).replace(/^r/, "R") + (multiple.length === 1 ? " contains" : " contain") + " more than one invoice number, so check the page ranges. The first number found was used.";
+      if (missing.length) text += " Nothing found for " + list(missing) + ". Type " + (missing.length === 1 ? "it" : "those") + " in or try a different " + (mode === "example" ? "example." : "label.");
+      setMsg(msg, text, missing.length || multiple.length ? "note" : "ok");
+    } catch (err) {
+      console.error(err);
+      setMsg(msg, "The PDF reader couldn't load or read this file. Check your connection and try again. (" + (err && err.message ? err.message : err) + ")", "err");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
   // ---------- Step 3: create ----------
   function invalidateResults() {
     if (!state.zipBlob) return;
@@ -1154,7 +1353,7 @@ Thank you.</textarea>
         });
         const bytes = await out.save();
         const fileName = r._file + ".pdf";
-        zip.file(fileName, bytes);
+        zip.file(fileName, bytes, { compression: "STORE" });
         files.push({
           name: r.name.trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(),
           amount: (r.amount || "").trim(), password: r.password, fileName, bytes, sent: false,
