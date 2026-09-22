@@ -391,6 +391,13 @@
   #step2 th:nth-child(10) { width: 2.9rem; }
   #step2 td input { font-size: 0.9rem; padding: 0.45rem 0.55rem; }
   #step2 th, #step2 td { padding-left: 0.35rem; padding-right: 0.35rem; }
+  .toolbar.pw .row { gap: 0.5rem 0.6rem; }
+  button.secondary { font-weight: 500; text-decoration: underline; text-underline-offset: 3px; color: var(--ink-soft); padding: 0.4rem 0.3rem; }
+  button.secondary:hover { color: var(--ink); }
+  .pw-note { margin: 0.5rem 0 0; }
+  .pw-note.ok-text { color: var(--ok); }
+  .pw-note.warn-text { color: var(--warn); }
+  .pw-note.err-text { color: var(--err); }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
   @media (max-width: 600px) {
@@ -554,19 +561,6 @@
           </div>
           <p class="name-example">First file saves as <b id="nameExample">—</b></p>
         </div>
-        <div class="toolbar pw">
-          <div class="row">
-            <span class="group-title">Passwords</span>
-            <span class="bar-note">A strong password is made for each file automatically.</span>
-          </div>
-          <div class="row" style="margin-top:0.7rem">
-            <button type="button" id="genPwBtn">Make new passwords</button>
-            <span>or use one for all</span>
-            <label class="sr-only" for="samePwInput">Password for every file</label>
-            <input type="text" id="samePwInput" autocomplete="off" spellcheck="false" placeholder="Type a password" style="max-width:12rem">
-            <button type="button" id="samePwBtn">Apply to all</button>
-          </div>
-        </div>
             <div class="row remember">
               <span class="bar-note">Your settings are remembered on this device. Files and details are never saved.</span>
               <button type="button" class="quiet" id="forgetBtn">Forget my settings</button>
@@ -574,6 +568,16 @@
             <p class="msg" id="forgetMsg" role="status" aria-live="polite"></p>
           </div>
         </details>
+
+        <div class="toolbar pw" id="pwBar">
+          <div class="row">
+            <label class="group-title" for="samePwInput">Password</label>
+            <input type="text" id="samePwInput" autocomplete="off" spellcheck="false" placeholder="Type one password for all files" style="max-width:17rem">
+            <button type="button" id="samePwBtn">Use for all files</button>
+            <button type="button" class="quiet secondary" id="genPwBtn">or make a different one for each file</button>
+          </div>
+          <p class="bar-note pw-note" id="pwNote">Each file already has its own strong password. Type one above only if everyone should use the same password.</p>
+        </div>
 
         <div class="table-scroll">
           <table>
@@ -1154,22 +1158,28 @@ Thank you.</textarea>
   $("everyN").addEventListener("change", applyQuickSplit);
   $("everyN").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); applyQuickSplit(); } });
 
-  $("genPwBtn").addEventListener("click", () => {
-    const msg = $("tableMsg");
-    if (!state.rows.length) { setMsg(msg, "Choose a PDF first.", "err"); return; }
-    state.rows.forEach((r) => { r.password = randomPassword(); });
-    invalidateResults(); renderRows();
-    setMsg(msg, "Made new passwords for every file.", "ok");
-  });
+  function pwNote(text, kind) {
+    const el = $("pwNote");
+    el.className = "bar-note pw-note" + (kind ? " " + kind : "");
+    el.textContent = text;
+  }
 
   $("samePwBtn").addEventListener("click", () => {
-    const msg = $("tableMsg");
-    if (!state.rows.length) { setMsg(msg, "Choose a PDF first.", "err"); return; }
+    if (!state.rows.length) { pwNote("Choose a PDF first, then set the password.", "err-text"); return; }
     const pw = $("samePwInput").value;
-    if (!pw) { setMsg(msg, "Type a password first, then apply it.", "err"); $("samePwInput").focus(); return; }
+    if (!pw) { pwNote("Type a password first, then select Use for all files.", "err-text"); $("samePwInput").focus(); return; }
     state.rows.forEach((r) => { r.password = pw; });
     invalidateResults(); renderRows();
-    setMsg(msg, "Every file will use the same password." + (pw.length < 8 ? " Consider a longer one, at least 8 characters." : ""), pw.length < 8 ? "note" : "ok");
+    pwNote("All " + state.rows.length + " files will use this password." + (pw.length < 8 ? " Consider a longer one, at least 8 characters." : ""), pw.length < 8 ? "warn-text" : "ok-text");
+  });
+  $("samePwInput").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); $("samePwBtn").click(); } });
+
+  $("genPwBtn").addEventListener("click", () => {
+    if (!state.rows.length) { pwNote("Choose a PDF first.", "err-text"); return; }
+    state.rows.forEach((r) => { r.password = randomPassword(); });
+    $("samePwInput").value = "";
+    invalidateResults(); renderRows();
+    pwNote("Each file now has its own strong password. They're in the table and the password list.", "ok-text");
   });
 
   $("addRowBtn").addEventListener("click", () => {
