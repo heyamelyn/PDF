@@ -105,7 +105,7 @@
   }
   h1, h2, h3, .group-title, .ring { font-family: "Outfit", "DM Sans", system-ui, sans-serif; }
   img { max-width: 100%; }
-  .wrap { max-width: 62rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  .wrap { max-width: 70rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
 
   /* Masthead: a soft card with layered pastel waves */
   .masthead {
@@ -257,11 +257,14 @@
   .name-example b { color: var(--ink); font-weight: 600; }
 
   .table-scroll { position: relative; overflow-x: auto; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
-  table { border-collapse: collapse; width: 100%; min-width: 70rem; }
+  table { border-collapse: collapse; width: 100%; min-width: 62rem; }
   th, td { padding: 0.55rem 0.65rem; text-align: left; vertical-align: top; }
   th { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); background: var(--surface-2); }
   tbody tr + tr td { border-top: 1px solid var(--line); }
   td.n { width: 2.75rem; padding-top: 1.05rem; }
+  button.remove { font-size: 1.25rem; line-height: 1; padding: 0.35rem 0.55rem; }
+  td { vertical-align: middle; }
+  td.n { vertical-align: middle; padding-top: 0.55rem; }
   td.n::before {
     content: attr(data-n); display: inline-grid; place-items: center;
     width: 1.6rem; height: 1.6rem; border-radius: 50%; font-size: 0.8rem; font-weight: 600;
@@ -270,10 +273,10 @@
   tbody tr:nth-child(3n+1) td.n::before { background: var(--sage-soft); }
   tbody tr:nth-child(3n+2) td.n::before { background: var(--peach-soft); }
   tbody tr:nth-child(3n) td.n::before { background: var(--pink-soft); }
-  td.pages-cell { width: 6.5rem; }
+  td.pages-cell { width: 5.5rem; }
   td.pw-cell { width: 11.5rem; }
   td.pw-cell input { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
-  td.act { width: 5rem; text-align: right; padding-top: 0.75rem; }
+  td.act { width: 2.75rem; text-align: right; padding-top: 0.6rem; }
   .saves-as { margin-top: 0.3rem; font-size: 0.8rem; color: var(--ink-soft); overflow-wrap: anywhere; }
   .empty { padding: 1.4rem; color: var(--ink-soft); }
 
@@ -315,12 +318,12 @@
   td.email-cell { width: 14rem; }
   td.inv-cell { width: 10.5rem; }
   td.amt-cell { width: 7.5rem; }
-  td.name-cell { width: 14rem; min-width: 12rem; }
+  td.name-cell { width: 13rem; min-width: 11rem; }
 
   .file-list { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: 0.6rem; }
   .file-item {
     display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.6rem 1rem; align-items: center;
-    background: var(--surface); border-radius: 16px; padding: 0.8rem 0.9rem;
+    background: var(--surface-2); border-radius: 16px; padding: 0.8rem 0.9rem;
   }
   .file-item .fi-name { font-weight: 600; overflow-wrap: anywhere; }
   .file-item .fi-meta { font-size: 0.875rem; color: var(--ink-soft); overflow-wrap: anywhere; }
@@ -335,11 +338,57 @@
   .list-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; align-items: baseline; margin-top: 1.3rem; }
   .list-head h4 { margin: 0; font-family: "Outfit", "DM Sans", sans-serif; font-weight: 600; font-size: 1.05rem; }
   @media (max-width: 600px) {
-    .file-item { grid-template-columns: 1fr; }
     .file-item .fi-actions { justify-content: flex-start; }
     #emailBar .naming-fields { grid-template-columns: 1fr; }
   }
 
+  .setup-status { margin: 0.1rem 0 1rem; padding: 0.8rem 1rem; border-radius: 14px; background: var(--surface-2); color: var(--ink); font-size: 0.95rem; }
+  .setup-status.ok { background: var(--sage-soft); }
+  .setup-status.note { background: var(--peach-soft); }
+  .setup-status.warn { background: var(--err-bg); color: var(--err); }
+  .setup-status.busy { color: var(--ink-soft); }
+  details.customise { margin: 0 0 1rem; background: transparent; box-shadow: none; padding: 0; border-radius: 0; }
+  details.customise > summary {
+    display: inline-flex; align-items: center; gap: 0.5rem; list-style: none;
+    font-family: "DM Sans", system-ui, sans-serif; font-size: 0.95rem; font-weight: 600;
+    padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer;
+  }
+  details.customise > summary::-webkit-details-marker { display: none; }
+  details.customise > summary::before { content: "+"; font-weight: 700; color: var(--ink-soft); }
+  details.customise[open] > summary::before { content: "\2212"; }
+  details.customise[open] > summary { margin-bottom: 0.8rem; }
+  .customise-body > .toolbar:last-of-type { margin-bottom: 0.4rem; }
+  .remember { justify-content: space-between; margin-top: 0.4rem; }
+  input.check { border-color: var(--peach); background: var(--peach-soft); }
+  .send-all { margin: 0.2rem 0 0.2rem; }
+  .send-all .bar-note { margin-left: auto; }
+  .file-item { grid-template-columns: auto minmax(0, 1fr); align-items: start; row-gap: 0.55rem; }
+  .file-item .thumbs { grid-row: span 2; }
+  .file-item .fi-actions { grid-column: 2; justify-content: flex-start; }
+  .thumbs { display: flex; gap: 4px; align-items: center; }
+  .thumb {
+    width: 46px; height: 65px; border-radius: 5px; background: var(--surface-2) center / cover no-repeat;
+    box-shadow: 0 0 0 1px var(--line-strong); position: relative; overflow: hidden;
+  }
+  .thumb span { position: absolute; right: 2px; bottom: 1px; font-size: 0.6rem; color: var(--ink-soft); background: var(--surface); border-radius: 3px; padding: 0 2px; }
+  .thumb.loaded span { opacity: .85; }
+  .thumbs .more { font-size: 0.75rem; color: var(--ink-soft); }
+  @media (max-width: 600px) {
+    .file-item .thumbs { grid-row: auto; }
+    .file-item .fi-actions { grid-column: 1 / -1; }
+    .send-all .bar-note { margin-left: 0; width: 100%; }
+  }
+  #step2 table { table-layout: fixed; }
+  #step2 th:nth-child(1) { width: 2.6rem; }
+  #step2 th:nth-child(2) { width: 17%; }
+  #step2 th:nth-child(3) { width: 22%; }
+  #step2 th:nth-child(4) { width: 16%; }
+  #step2 th:nth-child(5) { width: 10%; }
+  #step2 th:nth-child(6) { width: 8%; }
+  #step2 th:nth-child(7) { width: 17%; }
+  #step2 th:nth-child(8) { width: 2.9rem; }
+  #step2 td input { font-size: 0.9rem; padding: 0.45rem 0.55rem; }
+  #step2 th, #step2 td { padding-left: 0.35rem; padding-right: 0.35rem; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
   @media (max-width: 600px) {
@@ -406,26 +455,29 @@
 
     <section class="step" id="step2" aria-labelledby="h2-step">
       <div class="step-num" aria-hidden="true">2</div>
-      <h2 id="h2-step">Set up the files</h2>
+      <h2 id="h2-step">Check the details</h2>
       <div class="step-body">
-        <p class="hint">Each row becomes one PDF. Pages can be single pages or ranges, like <code>1-3</code> or <code>1,4,6-7</code>. Invoice numbers can go into file names and emails. Rows without a name or invoice number use the original file name and a number.</p>
+        <p class="setup-status" id="setupStatus" role="status" aria-live="polite">Choose a PDF and the details fill in automatically.</p>
 
+        <details class="customise" id="customise">
+          <summary>Customise</summary>
+          <div class="customise-body">
         <div class="toolbar">
           <div class="row">
-            <span class="group-title">Quick split</span>
+            <span class="group-title">Split</span>
             <label class="inline" for="everyN">One file every</label>
-            <input type="number" id="everyN" min="1" value="1">
+            <input type="number" id="everyN" min="1" value="2">
             <span>pages</span>
             <button type="button" id="splitEveryBtn">Apply</button>
           </div>
         </div>
         <div class="toolbar" id="extractBar">
           <div class="row">
-            <span class="group-title">Invoice numbers</span>
-            <span class="bar-note">Read them from the text on each file's pages.</span>
+            <span class="group-title">Reading the PDF</span>
+            <span class="bar-note">Invoice numbers, amounts, email addresses and names are read automatically. Change how invoice numbers are found here.</span>
           </div>
           <div class="naming-fields extract-fields">
-            <label class="field" for="extractMode">Find by
+            <label class="field" for="extractMode">Find invoice numbers by
               <select id="extractMode">
                 <option value="label">The label before the number</option>
                 <option value="example">An example number</option>
@@ -436,7 +488,7 @@
             </label>
             <div class="field extract-go">
               <span aria-hidden="true">&nbsp;</span>
-              <button type="button" id="extractBtn">Find in PDF</button>
+              <button type="button" id="extractBtn">Read again</button>
             </div>
           </div>
           <p class="tokens" id="extractHint">Example: if the invoice says <code>Invoice No: INV-2026-0001</code>, the label is <code>Invoice No</code>. Works with PDFs that contain text, not scanned images.</p>
@@ -487,13 +539,23 @@
         <div class="toolbar pw">
           <div class="row">
             <span class="group-title">Passwords</span>
-            <button type="button" id="genPwBtn">Generate a different one for each file</button>
+            <span class="bar-note">A strong password is made for each file automatically.</span>
+          </div>
+          <div class="row" style="margin-top:0.7rem">
+            <button type="button" id="genPwBtn">Make new passwords</button>
             <span>or use one for all</span>
             <label class="sr-only" for="samePwInput">Password for every file</label>
             <input type="text" id="samePwInput" autocomplete="off" spellcheck="false" placeholder="Type a password" style="max-width:12rem">
             <button type="button" id="samePwBtn">Apply to all</button>
           </div>
         </div>
+            <div class="row remember">
+              <span class="bar-note">Your settings are remembered on this device. Files and details are never saved.</span>
+              <button type="button" class="quiet" id="forgetBtn">Forget my settings</button>
+            </div>
+            <p class="msg" id="forgetMsg" role="status" aria-live="polite"></p>
+          </div>
+        </details>
 
         <div class="table-scroll">
           <table>
@@ -526,54 +588,45 @@
 
     <section class="step" id="step3" aria-labelledby="h3-step">
       <div class="step-num" aria-hidden="true">3</div>
-      <h2 id="h3-step">Create and send</h2>
+      <h2 id="h3-step">Send</h2>
       <div class="step-body">
-        <p class="hint">Files are encrypted with AES-256. You can save them all as a ZIP or email each one.</p>
+        <p class="hint" id="sendEmpty">Your files appear here once a PDF is added.</p>
+        <div id="sendArea" hidden>
+          <p class="hint">Each file is locked with AES-256 when you save or email it. Send each password separately, for example by SMS.</p>
 
-        <div class="toolbar" id="emailBar">
-          <div class="row">
-            <span class="group-title">Email message</span>
-            <span class="bar-note">Used when you email each file. Passwords are never put in the email.</span>
-          </div>
-          <div class="naming-fields">
-            <label class="field" for="emailSubject">Subject
-              <input type="text" id="emailSubject" value="Invoice {invoice}" autocomplete="off">
-            </label>
-            <label class="field" for="currency">Currency
-              <input type="text" id="currency" value="SGD" autocomplete="off" maxlength="6">
-            </label>
-          </div>
-          <label class="field" for="emailBody">Message
-            <textarea id="emailBody" spellcheck="true">Dear {name},
+          <details class="customise" id="emailCustomise">
+            <summary>Edit email message</summary>
+            <div class="toolbar" id="emailBar">
+              <p class="bar-note" style="margin:0 0 0.2rem">Passwords are never put in the email.</p>
+            <div class="naming-fields">
+              <label class="field" for="emailSubject">Subject
+                <input type="text" id="emailSubject" value="Invoice {invoice}" autocomplete="off">
+              </label>
+              <label class="field" for="currency">Currency
+                <input type="text" id="currency" value="SGD" autocomplete="off" maxlength="6">
+              </label>
+            </div>
+            <label class="field" for="emailBody">Message
+              <textarea id="emailBody" spellcheck="true">Dear {name},
 
 Please find attached invoice {invoice} for {amount}.
 
 The attachment is password-protected. The password will be sent to you separately.
 
 Thank you.</textarea>
-          </label>
-          <p class="tokens" id="emailTokens">Click to insert: <code data-etoken="{name}">{name}</code> <code data-etoken="{invoice}">{invoice}</code> <code data-etoken="{amount}">{amount}</code> <code data-etoken="{file}">{file}</code></p>
-        </div>
+            </label>
+            <p class="tokens" id="emailTokens">Click to insert: <code data-etoken="{name}">{name}</code> <code data-etoken="{invoice}">{invoice}</code> <code data-etoken="{amount}">{amount}</code> <code data-etoken="{file}">{file}</code></p>
+            </div>
+          </details>
 
-        <button type="button" class="primary" id="createBtn">Create locked files</button>
-        <div class="progress" id="progress" hidden><div></div></div>
-        <p class="msg" id="createMsg" role="status" aria-live="polite"></p>
-
-        <div class="results" id="results" hidden>
-          <h3 id="resultsTitle">Files ready</h3>
-          <p>Send each password separately from its file, for example by SMS or a different message. Keep the password list somewhere safe and delete it when you're done.</p>
-          <div class="row">
-            <button type="button" class="primary" id="saveZipBtn">Save ZIP</button>
+          <div class="row send-all">
+            <button type="button" class="primary" id="saveZipBtn">Save all as ZIP</button>
             <button type="button" id="savePwListBtn">Save password list</button>
-          </div>
-          <div class="fallback-links" id="fallbackLinks"></div>
-          <p class="msg" id="saveMsg" role="status" aria-live="polite"></p>
-
-          <div class="list-head">
-            <h4>Email each file</h4>
             <span class="bar-note" id="sentCount"></span>
           </div>
-          <p id="mailHelp">Email with PDF saves a draft with the locked PDF attached.</p>
+          <div class="progress" id="progress" hidden><div></div></div>
+          <p class="msg" id="saveMsg" role="status" aria-live="polite"></p>
+          <p class="hint" id="mailHelp"></p>
           <ul class="file-list" id="fileList"></ul>
         </div>
       </div>
@@ -581,10 +634,11 @@ Thank you.</textarea>
 
     <details>
       <summary>How this works and what to know</summary>
-      <p>This page uses open-source libraries (pdf-lib, JSZip and Papa Parse) that run entirely in your browser. Your PDF, the page ranges and the passwords stay in this tab and are cleared when you close or reload it.</p>
+      <p>This page uses open-source libraries (pdf-lib, PDF.js, JSZip and Papa Parse) that run entirely in your browser. Your PDF, the details and the passwords stay in this tab and are cleared when you close or reload it.</p>
       <ul>
         <li>Recipients need the password to open their file. Most PDF readers support AES-256, including Adobe Acrobat Reader, Chrome, Edge, and the built-in readers on iPhone and Android.</li>
-        <li>Invoice numbers can be read from the PDF's text. Always check them before sending, especially rows the tool highlights. Scanned PDFs have no readable text, so their numbers need to be typed in.</li>
+        <li>Invoice numbers, amounts (from the "Total" line), email addresses and names (after "Bill To" or "Attention") are read from the PDF's text. Email addresses that appear on most invoices are treated as your own and skipped. Always check the details before sending, especially highlighted fields. Scanned PDFs have no readable text, so details need to be typed in.</li>
+        <li>Your settings, like the email message and file name format, are remembered in this browser only. PDFs, names, email addresses and passwords are never saved. Use Forget my settings under Customise to clear them.</li>
         <li>CSV files can have the columns <code>name</code>, <code>email</code>, <code>invoice</code>, <code>amount</code>, <code>pages</code> and <code>password</code>. Only <code>pages</code> is required.</li>
         <li>Email with PDF creates an email file with the locked PDF attached. Classic Outlook for Windows and Apple Mail open it as a new message ready to send. Other email apps may open it as a received message instead, so test one first.</li>
         <li>The tool never sends email itself. You review and send each message from your own email app.</li>
@@ -851,14 +905,25 @@ Thank you.</textarea>
     }
     try {
       const bytes = new Uint8Array(await file.arrayBuffer());
+      await resetSource();
       state.sourceBytes = bytes;
       state.sourceName = file.name;
       state.sourcePassword = null;
+      state.rows = [];
       await openSource();
     } catch (err) {
       console.error(err);
       setMsg(msg, "This PDF couldn't be read. It may be damaged or not a real PDF.", "err");
     }
+  }
+
+  async function resetSource() {
+    state.libDoc = null;
+    state.textsRead = false;
+    pageTextCache.texts = [];
+    thumbCache.clear();
+    if (state.pjsTask) { try { await state.pjsTask.destroy(); } catch (e) {} }
+    state.pjsTask = null; state.pjsDoc = null;
   }
 
   async function openSource() {
@@ -878,16 +943,14 @@ Thank you.</textarea>
       }
       throw err;
     }
+    state.libDoc = doc;
     state.pageCount = doc.getPageCount();
     $("unlockBox").hidden = true;
     renderFileInfo();
     $("step1").classList.add("done");
-    if (!state.rows.length) {
-      const n = parseInt($("everyN").value, 10);
-      buildEveryN(Number.isFinite(n) && n >= 1 ? n : 1);
-    } else {
-      renderRows();
-    }
+    const n = parseInt($("everyN").value, 10);
+    buildEveryN(Number.isFinite(n) && n >= 1 ? n : 2);
+    await autoSetup();
     return doc;
   }
 
@@ -913,8 +976,31 @@ Thank you.</textarea>
     box.appendChild(chip);
   }
 
+  // ---------- Automatic setup ----------
+  // Runs whenever the PDF, the split or the CSV changes: passwords, then details read from the PDF
+  async function autoSetup() {
+    state.busy = true;
+    clearTimeout(sendListTimer);
+    try {
+      fillMissingPasswords();
+      renderRows();
+      await readDetailsFromPdf({ silentIfNoPdfJs: true });
+    } finally {
+      state.busy = false;
+    }
+    renderRows();
+    renderSendList();
+    updateSetupStatus();
+  }
+
+  function fillMissingPasswords() {
+    state.rows.forEach((r) => { if (!r.password) r.password = randomPassword(); });
+  }
+
   // ---------- Step 2: rows ----------
   const COLS = 8;
+  const AUTO_FIELDS = ["name", "email", "invoice", "amount"];
+
   function cellInput(r, field, opts) {
     const td = document.createElement("td");
     if (opts.cls) td.className = opts.cls;
@@ -929,8 +1015,9 @@ Thank you.</textarea>
     inp.setAttribute("aria-label", opts.label);
     inp.addEventListener("input", () => {
       r[field] = inp.value;
-      if (field === "invoice") r._invAuto = false;
-      inp.classList.remove("invalid");
+      if (r._auto) r._auto[field] = false;
+      if (r._flags) delete r._flags[field];
+      inp.classList.remove("invalid", "check");
       invalidateResults();
       if (opts.preview) updatePreviews();
     });
@@ -946,8 +1033,8 @@ Thank you.</textarea>
       const td = document.createElement("td");
       td.colSpan = COLS; td.className = "empty";
       td.textContent = state.pageCount
-        ? "No files set up yet. Use Quick split, add rows, or import a CSV."
-        : "Choose a PDF first, then set up the files here.";
+        ? "No files set up. Add a row or import a CSV."
+        : "Choose a PDF and the details fill in here.";
       tr.appendChild(td); tbody.appendChild(tr);
       updatePreviews();
       return;
@@ -960,10 +1047,6 @@ Thank you.</textarea>
       const nSr = document.createElement("span"); nSr.className = "sr-only"; nSr.textContent = "Row " + n; tdN.appendChild(nSr);
 
       const tdName = cellInput(r, "name", { cls: "name-cell", placeholder: "Recipient or label", label: "Name for row " + n, preview: true });
-      const savesAs = document.createElement("div");
-      savesAs.className = "saves-as";
-      tdName.appendChild(savesAs);
-
       const tdEmail = cellInput(r, "email", { cls: "email-cell", type: "email", placeholder: "name@example.com", label: "Email for row " + n, nospell: true });
       const tdInv = cellInput(r, "invoice", { cls: "inv-cell", placeholder: "INV-001", label: "Invoice number for row " + n, preview: true, nospell: true });
       const tdAmt = cellInput(r, "amount", { cls: "amt-cell", placeholder: "0.00", label: "Amount for row " + n, inputMode: "decimal", nospell: true });
@@ -972,24 +1055,31 @@ Thank you.</textarea>
 
       const tdAct = document.createElement("td"); tdAct.className = "act";
       const del = document.createElement("button");
-      del.type = "button"; del.className = "quiet"; del.textContent = "Remove";
+      del.type = "button"; del.className = "quiet remove"; del.textContent = "\u00d7"; del.title = "Remove row";
       del.setAttribute("aria-label", "Remove row " + n);
-      del.addEventListener("click", () => { state.rows.splice(i, 1); invalidateResults(); renderRows(); });
+      del.addEventListener("click", () => { state.rows.splice(i, 1); invalidateResults(); renderRows(); updateSetupStatus(); });
       tdAct.appendChild(del);
 
       tr.append(tdN, tdName, tdEmail, tdInv, tdAmt, tdPages, tdPw, tdAct);
       tr.dataset.index = i;
       tbody.appendChild(tr);
+
+      // Highlight what needs checking
+      const flags = r._flags || {};
+      Object.keys(flags).forEach((f) => {
+        const inp = tr.querySelector('input[data-field="' + f + '"]');
+        if (inp) inp.classList.add(flags[f] === "error" ? "invalid" : "check");
+      });
     });
     $("step2").classList.toggle("done", state.rows.length > 0);
     updatePreviews();
   }
 
   function blankRow(pages) {
-    return { name: "", email: "", invoice: "", amount: "", pages: pages || "", password: "" };
+    return { name: "", email: "", invoice: "", amount: "", pages: pages || "", password: "", _auto: {}, _flags: {} };
   }
 
-  // Rebuild page ranges, keeping each row's details (name, email, invoice, amount, password) in order
+  // Rebuild page ranges; details typed by hand stay with their row, details read from the PDF are read again
   function buildEveryN(n) {
     const total = state.pageCount;
     const old = state.rows;
@@ -999,10 +1089,17 @@ Thank you.</textarea>
       const end = Math.min(start + n - 1, total);
       const pages = start === end ? String(start) : start + "-" + end;
       const prev = old[k];
-      rows.push(prev ? Object.assign({}, prev, { pages }) : blankRow(pages));
+      if (prev) {
+        const row = Object.assign({}, prev, { pages, _flags: {} });
+        row._auto = Object.assign({}, prev._auto || {});
+        AUTO_FIELDS.forEach((f) => { if (row._auto[f]) { row[f] = ""; } });
+        rows.push(row);
+      } else {
+        rows.push(blankRow(pages));
+      }
       k++;
     }
-    const hasDetails = (r) => r.name || r.email || r.invoice || r.amount || r.password;
+    const hasDetails = (r) => AUTO_FIELDS.some((f) => r[f] && !(r._auto && r._auto[f]));
     const dropped = old.slice(rows.length).filter(hasDetails).length;
     state.rows = rows;
     invalidateResults();
@@ -1010,25 +1107,21 @@ Thank you.</textarea>
     return dropped;
   }
 
-  function applyQuickSplit() {
+  async function applyQuickSplit() {
     const msg = $("tableMsg");
-    if (!state.pageCount) { setMsg(msg, "Choose a PDF first.", "err"); return; }
+    if (!state.pageCount) { saveSettings(); return; }
     const n = parseInt($("everyN").value, 10);
     if (!Number.isFinite(n) || n < 1) { setMsg(msg, "Enter a whole number of pages, 1 or more.", "err"); return; }
-    // Skip if the rows already match, so nothing re-renders under the cursor
+    saveSettings();
     const expected = [];
     for (let start = 1; start <= state.pageCount; start += n) {
       const end = Math.min(start + n - 1, state.pageCount);
       expected.push(start === end ? String(start) : start + "-" + end);
     }
     if (expected.length === state.rows.length && expected.every((pg, i) => String(state.rows[i].pages).replace(/\s+/g, "") === pg)) return;
-    if (n > state.pageCount) { setMsg(msg, "The PDF only has " + state.pageCount + " pages, so this makes one file with every page.", "note"); }
     const dropped = buildEveryN(n);
-    const count = state.rows.length;
-    let text = count + (count === 1 ? " file" : " files") + ", " + n + (n === 1 ? " page" : " pages") + " each.";
-    if (state.pageCount % n && count > 1) text += " The last file has " + (state.pageCount % n) + (state.pageCount % n === 1 ? " page." : " pages.");
-    if (dropped) text += " " + dropped + (dropped === 1 ? " row" : " rows") + " with details no longer fit and were removed.";
-    if (n <= state.pageCount) setMsg(msg, text, dropped ? "note" : "ok");
+    setMsg(msg, dropped ? dropped + (dropped === 1 ? " row" : " rows") + " with details typed in no longer fit and were removed." : "", dropped ? "note" : "");
+    await autoSetup();
   }
 
   $("splitEveryBtn").addEventListener("click", applyQuickSplit);
@@ -1037,15 +1130,15 @@ Thank you.</textarea>
 
   $("genPwBtn").addEventListener("click", () => {
     const msg = $("tableMsg");
-    if (!state.rows.length) { setMsg(msg, "Add rows first, then generate passwords.", "err"); return; }
+    if (!state.rows.length) { setMsg(msg, "Choose a PDF first.", "err"); return; }
     state.rows.forEach((r) => { r.password = randomPassword(); });
     invalidateResults(); renderRows();
-    setMsg(msg, "Generated passwords. You'll get a password list with the files.", "ok");
+    setMsg(msg, "Made new passwords for every file.", "ok");
   });
 
   $("samePwBtn").addEventListener("click", () => {
     const msg = $("tableMsg");
-    if (!state.rows.length) { setMsg(msg, "Add rows first.", "err"); return; }
+    if (!state.rows.length) { setMsg(msg, "Choose a PDF first.", "err"); return; }
     const pw = $("samePwInput").value;
     if (!pw) { setMsg(msg, "Type a password first, then apply it.", "err"); $("samePwInput").focus(); return; }
     state.rows.forEach((r) => { r.password = pw; });
@@ -1054,16 +1147,17 @@ Thank you.</textarea>
   });
 
   $("addRowBtn").addEventListener("click", () => {
-    const n = state.rows.length + 1;
-    state.rows.push(blankRow());
-    invalidateResults(); renderRows();
+    const r = blankRow(); r.password = randomPassword();
+    state.rows.push(r);
+    invalidateResults(); renderRows(); updateSetupStatus();
     const inputs = $("rows").querySelectorAll("tr:last-child input");
     if (inputs[0]) inputs[0].focus();
   });
 
   $("clearBtn").addEventListener("click", () => {
     if (!state.rows.length) return;
-    state.rows = []; invalidateResults(); renderRows(); setMsg($("tableMsg"), "Removed all rows.", "ok");
+    state.rows = []; invalidateResults(); renderRows(); updateSetupStatus();
+    setMsg($("tableMsg"), "Removed all rows.", "ok");
   });
 
   $("csvLabel").addEventListener("keydown", (e) => {
@@ -1079,7 +1173,7 @@ Thank you.</textarea>
       header: true,
       skipEmptyLines: "greedy",
       transformHeader: (h) => h.trim().toLowerCase(),
-      complete: (res) => {
+      complete: async (res) => {
         const fields = (res.meta.fields || []);
         const pick = (cands) => fields.find((h) => cands.includes(h));
         const kName = pick(["name", "recipient", "customer", "file name", "filename", "file"]);
@@ -1090,29 +1184,28 @@ Thank you.</textarea>
         const kPw = pick(["password", "pw", "pass"]);
         if (!kPages) { setMsg(msg, "The CSV needs a \"pages\" column. Get the template to see the format.", "err"); return; }
         const get = (d, k) => (k ? String(d[k] == null ? "" : d[k]).trim() : "");
-        const rows = res.data.map((d) => ({
+        const rows = res.data.map((d) => Object.assign(blankRow(get(d, kPages)), {
           name: get(d, kName),
           email: get(d, kEmail),
           invoice: get(d, kInv),
           amount: get(d, kAmt),
-          pages: get(d, kPages),
           password: kPw ? String(d[kPw] == null ? "" : d[kPw]) : "",
         })).filter((r) => r.pages || r.name || r.invoice);
         if (!rows.length) { setMsg(msg, "The CSV has no rows.", "err"); return; }
-        state.rows = rows; invalidateResults(); renderRows();
-        const missingPw = rows.filter((r) => !r.password).length;
-        setMsg(msg, "Imported " + rows.length + " rows, replacing the previous ones." + (missingPw ? " " + missingPw + " have no password yet." : ""), missingPw ? "note" : "ok");
+        state.rows = rows; invalidateResults();
+        setMsg(msg, "Imported " + rows.length + " rows, replacing the previous ones. Empty details are read from the PDF where possible.", "ok");
+        await autoSetup();
       },
       error: () => setMsg(msg, "The CSV couldn't be read.", "err"),
     });
   });
 
   $("templateBtn").addEventListener("click", () => {
-    const csv = "name,email,invoice,amount,pages,password\r\nRecipient A,a@example.com,INV-001,120.00,1-2,\r\nRecipient B,b@example.com,INV-002,85.50,3,\r\nRecipient C,c@example.com,INV-003,240.00,4-5,\r\n";
+    const csv = "name,email,invoice,amount,pages,password\r\nRecipient A,a@example.com,INV-001,120.00,1-2,\r\nRecipient B,b@example.com,INV-002,85.50,3-4,\r\nRecipient C,c@example.com,INV-003,240.00,5-6,\r\n";
     offerFile("split-and-lock-template.csv", csv, $("tableMsg"));
   });
 
-  // ---------- Read invoice numbers from the PDF ----------
+  // ---------- Reading details from the PDF ----------
   const PDFJS_BASE = "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/legacy/build/";
   let pdfjsPromise = null;
   function loadPdfJs() {
@@ -1129,14 +1222,11 @@ Thank you.</textarea>
     }
     return pdfjsPromise;
   }
+  const pageTextCache = { texts: [] };
+  const thumbCache = new Map();
 
-  const pageTextCache = { key: null, texts: [] };
-
-  async function getPageTexts(indexes, onProgress) {
-    const key = state.sourceName + ":" + state.sourceBytes.length + ":" + state.pageCount;
-    if (pageTextCache.key !== key) { pageTextCache.key = key; pageTextCache.texts = []; }
-    const needed = [...new Set(indexes)].filter((i) => pageTextCache.texts[i] == null).sort((a, b) => a - b);
-    if (!needed.length) return pageTextCache.texts;
+  async function getPjsDoc() {
+    if (state.pjsDoc) return state.pjsDoc;
     const lib = await loadPdfJs();
     const task = lib.getDocument({
       data: state.sourceBytes.slice(),
@@ -1145,19 +1235,22 @@ Thank you.</textarea>
       disableFontFace: true,
       stopAtErrors: false,
     });
-    const doc = await task.promise;
-    try {
-      for (let k = 0; k < needed.length; k++) {
-        const i = needed[k];
-        const page = await doc.getPage(i + 1);
-        const content = await page.getTextContent();
-        pageTextCache.texts[i] = content.items.map((it) => (it.str || "") + (it.hasEOL ? "\n" : " ")).join("");
-        page.cleanup();
-        if (onProgress) onProgress(k + 1, needed.length);
-        if (k % 5 === 4) await new Promise((res) => setTimeout(res, 0));
-      }
-    } finally {
-      await task.destroy();
+    state.pjsTask = task;
+    state.pjsDoc = await task.promise;
+    return state.pjsDoc;
+  }
+
+  async function getPageTexts(indexes, onProgress) {
+    const needed = [...new Set(indexes)].filter((i) => pageTextCache.texts[i] == null).sort((a, b) => a - b);
+    if (!needed.length) return pageTextCache.texts;
+    const doc = await getPjsDoc();
+    for (let k = 0; k < needed.length; k++) {
+      const i = needed[k];
+      const page = await doc.getPage(i + 1);
+      const content = await page.getTextContent();
+      pageTextCache.texts[i] = content.items.map((it) => (it.str || "") + (it.hasEOL ? "\n" : " ")).join("");
+      if (onProgress) onProgress(k + 1, needed.length);
+      if (k % 5 === 4) await new Promise((res) => setTimeout(res, 0));
     }
     return pageTextCache.texts;
   }
@@ -1207,6 +1300,97 @@ Thank you.</textarea>
     }
     return [...new Set(found)];
   }
+  function findAmount(text) {
+    const re = /(?<![A-Za-z])(?:grand\s+)?total(?:\s+amount)?(?:\s+due)?(?:\s+payable)?\s*(?:\((?:SGD|S\$|\$)\))?\s*[:\-]?\s*(?:SGD|S\$|US\$|USD|\$)?\s*(\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?)(?![\d,])/gi;
+    let last = "";
+    for (const m of text.matchAll(re)) last = m[1];
+    return last ? last.replace(/,/g, "") : "";
+  }
+
+  function findEmails(text) {
+    const list = text.match(/[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}/g) || [];
+    return [...new Set(list.map((e) => e.toLowerCase()))];
+  }
+
+  function findName(text) {
+    const m = text.match(/(?:bill(?:ed)?\s+to|attention|attn\.?|customer\s+name)\s*[:\-]?\s*([^\n]{2,90})/i);
+    if (!m) return "";
+    let s = m[1].split(/\s{3,}|\s+(?:invoice|date|tel|phone|mobile|email|e-mail|address|uen|gst)\b/i)[0];
+    s = s.replace(/[,;:|]+\s*$/, "").trim();
+    if (!/[A-Za-z\u00C0-\uFFFF]/.test(s) || /@/.test(s)) return "";
+    return s.slice(0, 60);
+  }
+
+  async function readDetailsFromPdf(opts) {
+    opts = opts || {};
+    const status = $("setupStatus");
+    if (!state.sourceBytes || !state.rows.length) return;
+    const mode = $("extractMode").value;
+    const value = $("extractValue").value.trim() || (mode === "example" ? "INV-0001" : "Invoice No");
+
+    const ranges = state.rows.map((r) => { try { return parsePages(r.pages, state.pageCount); } catch (e) { return null; } });
+    setStatus(status, "Reading the PDF…", "busy");
+    let texts;
+    try {
+      texts = await getPageTexts(ranges.filter(Boolean).flat(), (done, total) => {
+        if (total > 10) setStatus(status, "Reading page " + done + " of " + total + "…", "busy");
+      });
+    } catch (err) {
+      console.error(err);
+      state.textsRead = false;
+      setStatus(status, "The PDF couldn't be read automatically, so type the details in. (" + (err && err.message ? err.message : err) + ")", "warn");
+      return;
+    }
+    state.textsRead = true;
+    state.hasText = texts.some((t) => t && t.trim());
+    if (!state.hasText) {
+      state.rows.forEach((r) => { r._flags = r._flags || {}; });
+      return;
+    }
+
+    // Emails that appear on most invoices are the sender's own, not the customer's
+    const rowTexts = state.rows.map((r, i) => (ranges[i] ? ranges[i].map((p) => texts[p] || "").join("\n") : ""));
+    const emailCounts = new Map();
+    rowTexts.forEach((t) => findEmails(t).forEach((e) => emailCounts.set(e, (emailCounts.get(e) || 0) + 1)));
+    const senderEmails = new Set(state.rows.length >= 3
+      ? [...emailCounts].filter(([, c]) => c >= Math.max(2, state.rows.length * 0.5)).map(([e]) => e)
+      : []);
+
+    state.rows.forEach((r, i) => {
+      r._auto = r._auto || {};
+      r._flags = {};
+      const text = rowTexts[i];
+      const canFill = (f) => !r[f] || r._auto[f];
+      const fill = (f, v) => { if (canFill(f)) { r[f] = v; r._auto[f] = !!v; } };
+
+      const nums = findNumbers(text, mode, value);
+      if (canFill("invoice")) {
+        fill("invoice", nums[0] || "");
+        if (!nums.length) r._flags.invoice = "check";
+      }
+      if (nums.length > 1) r._flags.pages = "check";
+
+      const amt = findAmount(text);
+      fill("amount", amt);
+
+      const email = findEmails(text).find((e) => !senderEmails.has(e)) || "";
+      fill("email", email);
+      if (!r.email) r._flags.email = "check";
+
+      fill("name", findName(text));
+    });
+  }
+
+  $("extractBtn").addEventListener("click", async () => {
+    const btn = $("extractBtn");
+    if (!state.sourceBytes) { setMsg($("tableMsg"), "Choose a PDF first.", "err"); return; }
+    btn.disabled = true;
+    saveSettings();
+    state.busy = true;
+    try { await readDetailsFromPdf(); }
+    finally { state.busy = false; btn.disabled = false; }
+    renderRows(); renderSendList(); updateSetupStatus();
+  });
 
   function syncExtractFields() {
     const mode = $("extractMode").value;
@@ -1220,171 +1404,92 @@ Thank you.</textarea>
       : "Example: if the invoice says <code>Invoice No: INV-2026-0001</code>, the label is <code>Invoice No</code>. Works with PDFs that contain text, not scanned images.";
   }
   $("extractMode").addEventListener("change", syncExtractFields);
+  function syncExtractLabels() {
+    const v = $("extractValue").value;
+    syncExtractFields();
+    $("extractValue").value = v;
+  }
 
-  $("extractBtn").addEventListener("click", async () => {
-    const msg = $("tableMsg");
-    const btn = $("extractBtn");
-    if (!state.sourceBytes || !state.pageCount) { setMsg(msg, "Choose a PDF first.", "err"); return; }
-    if (!state.rows.length) { setMsg(msg, "Set up the files first, for example with Quick split.", "err"); return; }
-    const mode = $("extractMode").value;
-    const value = $("extractValue").value.trim();
-    if (!value) { setMsg(msg, mode === "example" ? "Type an example invoice number first." : "Type the label that appears before the invoice number.", "err"); return; }
-    if (mode === "example" && !/\d/.test(value)) { setMsg(msg, "The example needs at least one digit, like INV-0001.", "err"); return; }
+  // ---------- Status summary ----------
+  function setStatus(el, text, kind) {
+    el.className = "setup-status" + (kind ? " " + kind : "");
+    el.textContent = text;
+  }
 
-    const ranges = [];
-    const badRows = [];
+  function rowProblem(r) {
+    try { parsePages(r.pages, state.pageCount); } catch (e) { return e.message; }
+    if (!r.password) return "No password";
+    return "";
+  }
+
+  function updateSetupStatus() {
+    if (state.busy) return;
+    const status = $("setupStatus");
+    if (!state.pageCount) { setStatus(status, "Choose a PDF and the details fill in automatically."); return; }
+    if (!state.rows.length) { setStatus(status, "No files set up."); return; }
+    const total = state.rows.length;
+    const errors = [], noInvoice = [], twoInvoices = [], noEmail = [];
     state.rows.forEach((r, i) => {
-      try { ranges[i] = parsePages(r.pages, state.pageCount); } catch (e) { badRows.push(i + 1); }
+      const n = i + 1;
+      if (rowProblem(r)) errors.push(n);
+      const fl = r._flags || {};
+      if (fl.invoice) noInvoice.push(n);
+      if (fl.pages) twoInvoices.push(n);
+      if (!r.email) noEmail.push(n);
     });
-    if (badRows.length) { setMsg(msg, "Fix the page ranges first (rows " + badRows.slice(0, 5).join(", ") + (badRows.length > 5 ? " and more" : "") + ").", "err"); return; }
+    const list = (a) => (a.length === 1 ? "row " : "rows ") + a.slice(0, 6).join(", ") + (a.length > 6 ? " and " + (a.length - 6) + " more" : "");
+    const parts = [];
+    if (errors.length) parts.push(list(errors) + " can't be created yet (check pages and password)");
+    if (twoInvoices.length) parts.push(list(twoInvoices) + " contain more than one invoice");
+    if (noInvoice.length) parts.push("no invoice number found for " + list(noInvoice));
+    if (noEmail.length) parts.push("no email address for " + list(noEmail));
+    let text = total + (total === 1 ? " file" : " files") + " ready to send.";
+    if (state.textsRead && state.hasText === false) text += " This PDF has no readable text, probably a scan, so type the details in.";
+    else if (state.textsRead) text += " Details were read from the PDF, so give them a quick check.";
+    if (parts.length) text += " Please check: " + parts.join("; ") + ".";
+    setStatus(status, text, errors.length || twoInvoices.length ? "warn" : (parts.length ? "note" : "ok"));
+  }
 
-    btn.disabled = true;
-    setMsg(msg, "Loading the PDF reader…", "note");
-    try {
-      const texts = await getPageTexts(ranges.flat(), (done, total) => {
-        setMsg(msg, "Reading page " + done + " of " + total + "…", "note");
-      });
-      if (texts.filter((t) => t && t.trim()).length === 0) {
-        setMsg(msg, "No text was found in this PDF. It may be a scanned image, so invoice numbers need to be typed in.", "err");
-        return;
-      }
-      let found = 0;
-      const missing = [], multiple = [];
-      state.rows.forEach((r, i) => {
-        const text = ranges[i].map((p) => texts[p] || "").join("\n");
-        const nums = findNumbers(text, mode, value);
-        r._extract = "";
-        if (nums.length === 1) { r.invoice = nums[0]; r._invAuto = true; found++; }
-        else if (nums.length > 1) { r.invoice = nums[0]; r._invAuto = true; found++; multiple.push(i + 1); r._extract = "multiple"; }
-        else {
-          // Clear numbers filled by an earlier search, but keep ones typed by hand
-          if (r._invAuto) { r.invoice = ""; r._invAuto = false; }
-          missing.push(i + 1); r._extract = "missing";
-        }
-      });
-      invalidateResults();
-      renderRows();
-      state.rows.forEach((r, i) => {
-        if (!r._extract) return;
-        const inp = $("rows").querySelector('tr[data-index="' + i + '"] input[data-field="invoice"]');
-        if (inp) inp.classList.add("invalid");
-      });
-      const list = (a) => (a.length === 1 ? "row " : "rows ") + a.slice(0, 8).join(", ") + (a.length > 8 ? " and " + (a.length - 8) + " more" : "");
-      let text = "Found invoice numbers for " + found + " of " + state.rows.length + " files.";
-      if (multiple.length) text += " " + list(multiple).replace(/^r/, "R") + (multiple.length === 1 ? " contains" : " contain") + " more than one invoice number, so check the page ranges. The first number found was used.";
-      if (missing.length) text += " Nothing found for " + list(missing) + ". Type " + (missing.length === 1 ? "it" : "those") + " in or try a different " + (mode === "example" ? "example." : "label.");
-      setMsg(msg, text, missing.length || multiple.length ? "note" : "ok");
-    } catch (err) {
-      console.error(err);
-      setMsg(msg, "The PDF reader couldn't load or read this file. Check your connection and try again. (" + (err && err.message ? err.message : err) + ")", "err");
-    } finally {
-      btn.disabled = false;
-    }
-  });
-
-  // ---------- Step 3: create ----------
+  // ---------- Step 3: send ----------
+  let sendListTimer = null;
   function invalidateResults() {
-    if (!state.zipBlob) return;
-    state.zipBlob = null; state.pwCsv = ""; state.files = [];
-    $("results").hidden = true;
-    $("fallbackLinks").innerHTML = "";
-    $("fileList").innerHTML = "";
-    $("step3").classList.remove("done");
-    setMsg($("createMsg"), "Setup changed. Create the files again to include your changes.", "note");
+    state.zipBlob = null;
+    clearTimeout(sendListTimer);
+    if (state.busy) return;
+    sendListTimer = setTimeout(() => { renderSendList(); updateSetupStatus(); }, 300);
+  }
+
+  // Locked files are made on demand and reused until the pages or password change
+  async function ensureFile(r) {
+    const key = r.pages.replace(/\s+/g, "") + "\u0000" + r.password;
+    if (r._file_cache && r._file_cache.key === key) return r._file_cache.bytes;
+    const { PDFDocument } = window.PDFLib;
+    if (!state.libDoc) {
+      const opts = state.sourcePassword != null ? { password: state.sourcePassword } : {};
+      state.libDoc = await PDFDocument.load(state.sourceBytes, opts);
+    }
+    const out = await PDFDocument.create();
+    const pages = await out.copyPages(state.libDoc, parsePages(r.pages, state.pageCount));
+    pages.forEach((p) => out.addPage(p));
+    out.encrypt({
+      userPassword: r.password,
+      ownerPassword: randomOwnerPassword(),
+      permissions: { printing: "highResolution", copying: true, contentAccessibility: true, modifying: false, annotating: false, fillingForms: true, documentAssembly: false },
+    });
+    const bytes = await out.save();
+    r._file_cache = { key, bytes };
+    return bytes;
+  }
+
+  async function fileFor(r) {
+    const bytes = await ensureFile(r);
+    return {
+      name: (r.name || "").trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(),
+      amount: (r.amount || "").trim(), password: r.password, fileName: r._file + ".pdf", bytes,
+    };
   }
 
   const EMAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;
-
-  function validate() {
-    const problems = [];
-    const tbody = $("rows");
-    state.rows.forEach((r, i) => {
-      const tr = tbody.querySelector('tr[data-index="' + i + '"]');
-      const field = (f) => tr && tr.querySelector('input[data-field="' + f + '"]');
-      try { r._indexes = parsePages(r.pages, state.pageCount); }
-      catch (e) { problems.push("Row " + (i + 1) + ": " + e.message + "."); if (field("pages")) field("pages").classList.add("invalid"); }
-      if (!r.password) { problems.push("Row " + (i + 1) + ": password is empty."); if (field("password")) field("password").classList.add("invalid"); }
-      if (r.email && !EMAIL_RE.test(r.email.trim())) { problems.push("Row " + (i + 1) + ": email address looks incomplete."); if (field("email")) field("email").classList.add("invalid"); }
-    });
-    assignFileNames();
-    return problems;
-  }
-
-  $("createBtn").addEventListener("click", async () => {
-    const msg = $("createMsg");
-    const btn = $("createBtn");
-    setMsg(msg, "");
-    if (!libsReady()) { setMsg(msg, "The PDF tools didn't load. Check your connection and reload the page.", "err"); return; }
-    if (!state.sourceBytes || !state.pageCount) { setMsg(msg, "Choose a PDF in step 1 first.", "err"); return; }
-    if (!state.rows.length) { setMsg(msg, "Set up at least one file in step 2.", "err"); return; }
-    const problems = validate();
-    if (problems.length) {
-      const extra = problems.length > 4 ? " And " + (problems.length - 4) + " more." : "";
-      setMsg(msg, "Fix these before creating the files: " + problems.slice(0, 4).join(" ") + extra, "err");
-      return;
-    }
-
-    btn.disabled = true;
-    const bar = $("progress"); bar.hidden = false;
-    const fill = bar.firstElementChild; fill.style.width = "0%";
-    $("results").hidden = true;
-    $("fallbackLinks").innerHTML = "";
-    $("fileList").innerHTML = "";
-
-    try {
-      const { PDFDocument } = window.PDFLib;
-      const opts = state.sourcePassword != null ? { password: state.sourcePassword } : {};
-      const src = await PDFDocument.load(state.sourceBytes, opts);
-      const zip = new window.JSZip();
-      const lines = ["name,email,invoice,amount,file,pages,password"];
-      const total = state.rows.length;
-      const files = [];
-
-      for (let i = 0; i < total; i++) {
-        const r = state.rows[i];
-        setMsg(msg, "Creating file " + (i + 1) + " of " + total + "…");
-        const out = await PDFDocument.create();
-        const pages = await out.copyPages(src, r._indexes);
-        pages.forEach((p) => out.addPage(p));
-        out.encrypt({
-          userPassword: r.password,
-          ownerPassword: randomOwnerPassword(),
-          permissions: { printing: "highResolution", copying: true, contentAccessibility: true, modifying: false, annotating: false, fillingForms: true, documentAssembly: false },
-        });
-        const bytes = await out.save();
-        const fileName = r._file + ".pdf";
-        zip.file(fileName, bytes, { compression: "STORE" });
-        files.push({
-          name: r.name.trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(),
-          amount: (r.amount || "").trim(), password: r.password, fileName, bytes, sent: false,
-        });
-        lines.push([r.name, r.email, r.invoice, r.amount, fileName, r.pages, r.password].map(csvEscape).join(","));
-        fill.style.width = Math.round(((i + 1) / total) * 90) + "%";
-        await new Promise((res) => setTimeout(res, 0));
-      }
-
-      setMsg(msg, "Packing the ZIP…");
-      state.zipBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } });
-      state.zipName = baseName() + "-locked.zip";
-      state.pwCsv = lines.join("\r\n") + "\r\n";
-      state.files = files;
-      fill.style.width = "100%";
-
-      $("resultsTitle").textContent = total + (total === 1 ? " file ready" : " files ready");
-      renderFileList();
-      $("results").hidden = false;
-      $("step3").classList.add("done");
-      setMsg(msg, "");
-      setMsg($("saveMsg"), "");
-      $("saveZipBtn").focus();
-    } catch (err) {
-      console.error(err);
-      setMsg(msg, "Something went wrong while creating the files: " + (err && err.message ? err.message : err), "err");
-    } finally {
-      btn.disabled = false;
-      setTimeout(() => { bar.hidden = true; }, 600);
-    }
-  });
 
   // ---------- Email each file ----------
   function formatAmount(raw) {
@@ -1444,58 +1549,73 @@ Thank you.</textarea>
       wrap76(bytesToBase64(f.bytes)) +
       "--" + boundary + "--\r\n";
   }
-
-  function markSent(f, li) {
-    f.sent = true;
-    li.classList.add("sent");
-    updateSentCount();
+  function metaText(r) {
+    const parts = [];
+    parts.push(r.email ? "To " + r.email.trim() : "No email address");
+    if (r.invoice) parts.push("Invoice " + r.invoice.trim());
+    if (r.amount) parts.push(formatAmount(r.amount));
+    return parts.join(", ");
   }
 
   function updateSentCount() {
-    const total = state.files.length;
-    const done = state.files.filter((f) => f.sent).length;
-    $("sentCount").textContent = done ? done + " of " + total + " drafted" : "";
+    const total = state.rows.length;
+    const done = state.rows.filter((r) => r._sent).length;
+    $("sentCount").textContent = done ? done + " of " + total + " emailed" : "";
   }
 
-  function setStatus(el, text, isErr) {
+  function itemStatus(el, text, isErr) {
     el.className = "fi-status" + (isErr ? " err" : "");
     el.textContent = text;
   }
 
-  function metaText(f) {
-    const parts = [];
-    parts.push(f.email ? "To " + f.email : "No email address");
-    if (f.invoice) parts.push("Invoice " + f.invoice);
-    if (f.amount) parts.push(formatAmount(f.amount));
-    return parts.join(", ");
-  }
-
-  function renderFileList() {
+  function renderSendList() {
     const list = $("fileList");
     list.innerHTML = "";
+    const has = state.rows.length > 0;
+    $("sendArea").hidden = !has;
+    $("sendEmpty").hidden = has;
+    if (!has) return;
+    assignFileNames();
     $("mailHelp").textContent = inFrame
       ? "Emails with the PDF attached work on the standalone page. Here, Email without PDF opens a message you attach the file to yourself."
-      : "Email with PDF saves a draft (.eml file) with the locked PDF attached. Open it from your downloads to review and send it in Outlook. Email without PDF only fills in the text, because browsers can't attach files to a new email directly.";
+      : "Email with PDF saves a draft with the locked PDF attached. Open it from your downloads to review and send it in Outlook.";
 
-    state.files.forEach((f, i) => {
+    state.rows.forEach((r, i) => {
       const li = document.createElement("li");
-      li.className = "file-item" + (f.sent ? " sent" : "");
+      li.className = "file-item" + (r._sent ? " sent" : "");
 
-      const info = document.createElement("div");
-      const nm = document.createElement("div"); nm.className = "fi-name"; nm.textContent = f.fileName;
+      const thumbs = document.createElement("div");
+      thumbs.className = "thumbs";
+      thumbs.setAttribute("aria-hidden", "true");
+      let idx = [];
+      try { idx = parsePages(r.pages, state.pageCount); } catch (e) {}
+      idx.slice(0, 2).forEach((p) => {
+        const t = document.createElement("div");
+        t.className = "thumb"; t.dataset.page = p;
+        const lbl = document.createElement("span"); lbl.textContent = p + 1; t.appendChild(lbl);
+        thumbs.appendChild(t);
+      });
+      if (idx.length > 2) { const more = document.createElement("span"); more.className = "more"; more.textContent = "+" + (idx.length - 2); thumbs.appendChild(more); }
+
+      const info = document.createElement("div"); info.className = "fi-info";
+      const nm = document.createElement("div"); nm.className = "fi-name"; nm.textContent = r._file + ".pdf";
       const meta = document.createElement("div"); meta.className = "fi-meta";
-      meta.textContent = metaText(f);
+      const problem = rowProblem(r);
+      meta.textContent = problem ? "Row " + (i + 1) + ": " + problem : metaText(r) + (idx.length ? ", pages " + r.pages : "");
       const status = document.createElement("div"); status.className = "fi-status"; status.setAttribute("role", "status");
       info.append(nm, meta, status);
 
       const actions = document.createElement("div"); actions.className = "fi-actions";
+      const mk = (label, cls, aria, fn) => {
+        const b = document.createElement("button");
+        b.type = "button"; if (cls) b.className = cls; b.textContent = label; b.setAttribute("aria-label", aria);
+        b.disabled = !!problem;
+        b.addEventListener("click", fn);
+        actions.appendChild(b);
+        return b;
+      };
 
-      const draftBtn = document.createElement("button");
-      draftBtn.type = "button"; draftBtn.className = "mail";
-      draftBtn.textContent = "Email with PDF";
-      draftBtn.title = "Saves an email draft with the locked PDF already attached";
-      draftBtn.setAttribute("aria-label", "Email with PDF attached for " + f.fileName);
-      draftBtn.addEventListener("click", () => {
+      mk("Email with PDF", "mail", "Email with PDF attached for " + r._file, async () => {
         if (inFrame) {
           status.className = "fi-status err";
           status.textContent = "Drafts with attachments can't be saved in this view. ";
@@ -1507,22 +1627,18 @@ Thank you.</textarea>
           return;
         }
         try {
-          const eml = buildEml(f);
-          plainDownload(f.fileName.replace(/\.pdf$/i, "") + ".eml", new Blob([eml], { type: "message/rfc822" }));
-          setStatus(status, "Draft with PDF attached saved. Open the .eml file from your downloads to review and send it in Outlook.");
-          markSent(f, li);
+          const f = await fileFor(r);
+          plainDownload(r._file + ".eml", new Blob([buildEml(f)], { type: "message/rfc822" }));
+          itemStatus(status, "Draft saved. Open the .eml file from your downloads to review and send it in Outlook.");
+          r._sent = true; li.classList.add("sent"); updateSentCount();
         } catch (err) {
           console.error(err);
-          setStatus(status, "The draft couldn't be created: " + (err && err.message ? err.message : err), true);
+          itemStatus(status, "The draft couldn't be created: " + (err && err.message ? err.message : err), true);
         }
       });
 
-      const mailtoBtn = document.createElement("button");
-      mailtoBtn.type = "button";
-      mailtoBtn.textContent = "Email without PDF";
-      mailtoBtn.title = "Opens a new email with the text filled in. You attach the PDF yourself.";
-      mailtoBtn.setAttribute("aria-label", "Email without attachment for " + f.fileName);
-      mailtoBtn.addEventListener("click", () => {
+      mk("Email without PDF", "", "Email without attachment for " + r._file, () => {
+        const f = { name: (r.name || "").trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(), amount: (r.amount || "").trim(), fileName: r._file + ".pdf" };
         const subject = fillEmailTemplate($("emailSubject").value, f).replace(/[\r\n]+/g, " ").trim();
         const body = fillEmailTemplate($("emailBody").value, f);
         const href = "mailto:" + (f.email && EMAIL_RE.test(f.email) ? encodeURIComponent(f.email).replace(/%40/g, "@") : "") +
@@ -1530,48 +1646,164 @@ Thank you.</textarea>
         const a = document.createElement("a");
         a.href = href; a.target = inFrame ? "_blank" : "_self"; a.rel = "noopener";
         document.body.appendChild(a); a.click(); a.remove();
-        setStatus(status, "Opened an email without the attachment. Use Save PDF and attach " + f.fileName + " before sending, or use Email with PDF instead.");
-        markSent(f, li);
+        itemStatus(status, "Opened an email without the attachment. Use Save PDF and attach " + f.fileName + " before sending, or use Email with PDF instead.");
+        r._sent = true; li.classList.add("sent"); updateSentCount();
       });
 
-      const pdfBtn = document.createElement("button");
-      pdfBtn.type = "button";
-      pdfBtn.textContent = "Save PDF";
-      pdfBtn.setAttribute("aria-label", "Save " + f.fileName);
-      pdfBtn.addEventListener("click", () => {
-        offerFile(f.fileName, new Blob([f.bytes], { type: "application/pdf" }), status);
-      });
-
-      const pwBtn = document.createElement("button");
-      pwBtn.type = "button";
-      pwBtn.textContent = "Copy password";
-      pwBtn.setAttribute("aria-label", "Copy password for " + f.fileName);
-      pwBtn.addEventListener("click", async () => {
+      mk("Save PDF", "", "Save " + r._file + ".pdf", async () => {
         try {
-          await navigator.clipboard.writeText(f.password);
-          setStatus(status, "Password copied. Send it through a different channel, like SMS.");
+          const bytes = await ensureFile(r);
+          offerFile(r._file + ".pdf", new Blob([bytes], { type: "application/pdf" }), status);
+        } catch (err) { itemStatus(status, "The file couldn't be created: " + (err && err.message ? err.message : err), true); }
+      });
+
+      mk("Copy password", "", "Copy password for " + r._file, async () => {
+        try {
+          await navigator.clipboard.writeText(r.password);
+          itemStatus(status, "Password copied. Send it through a different channel, like SMS.");
         } catch (e) {
           status.className = "fi-status";
           status.textContent = "Copying isn't allowed here. Password: ";
           const code = document.createElement("code");
-          code.textContent = f.password; code.style.userSelect = "all";
+          code.textContent = r.password; code.style.userSelect = "all";
           status.appendChild(code);
         }
       });
 
-      actions.append(draftBtn, mailtoBtn, pdfBtn, pwBtn);
-      li.append(info, actions);
+      li.append(thumbs, info, actions);
       list.appendChild(li);
     });
     updateSentCount();
+    queueThumbnails();
   }
 
-  $("saveZipBtn").addEventListener("click", () => {
-    if (state.zipBlob) offerFile(state.zipName, state.zipBlob, $("saveMsg"));
+  // ---------- Page previews ----------
+  let thumbRun = 0;
+  async function queueThumbnails() {
+    const run = ++thumbRun;
+    const els = [...document.querySelectorAll("#fileList .thumb")];
+    if (!els.length || !state.sourceBytes) return;
+    let doc;
+    try { doc = await getPjsDoc(); } catch (e) { return; }
+    for (const el of els) {
+      if (run !== thumbRun) return;
+      const p = parseInt(el.dataset.page, 10);
+      try {
+        let url = thumbCache.get(p);
+        if (!url) {
+          const page = await doc.getPage(p + 1);
+          const base = page.getViewport({ scale: 1 });
+          const viewport = page.getViewport({ scale: 96 / base.width });
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.ceil(viewport.width); canvas.height = Math.ceil(viewport.height);
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+          await page.render({ canvas, canvasContext: ctx, viewport }).promise;
+          url = canvas.toDataURL("image/jpeg", 0.7);
+          thumbCache.set(p, url);
+        }
+        if (run !== thumbRun) return;
+        el.style.backgroundImage = "url(" + url + ")";
+        el.classList.add("loaded");
+      } catch (e) { /* previews are optional */ }
+      await new Promise((res) => setTimeout(res, 0));
+    }
+  }
+
+  // ---------- Save everything ----------
+  async function buildZip() {
+    const bar = $("progress"); const fill = bar.firstElementChild;
+    const msg = $("saveMsg");
+    const ready = state.rows.filter((r) => !rowProblem(r));
+    if (!ready.length) throw new Error("No files are ready yet.");
+    bar.hidden = false; fill.style.width = "0%";
+    const zip = new window.JSZip();
+    for (let i = 0; i < ready.length; i++) {
+      setMsg(msg, "Locking file " + (i + 1) + " of " + ready.length + "…", "note");
+      const bytes = await ensureFile(ready[i]);
+      zip.file(ready[i]._file + ".pdf", bytes, { compression: "STORE" });
+      fill.style.width = Math.round(((i + 1) / ready.length) * 95) + "%";
+      await new Promise((res) => setTimeout(res, 0));
+    }
+    setMsg(msg, "Packing the ZIP…", "note");
+    const blob = await zip.generateAsync({ type: "blob" });
+    fill.style.width = "100%";
+    setTimeout(() => { bar.hidden = true; }, 600);
+    return { blob, count: ready.length, skipped: state.rows.length - ready.length };
+  }
+
+  $("saveZipBtn").addEventListener("click", async () => {
+    const btn = $("saveZipBtn"); const msg = $("saveMsg");
+    assignFileNames();
+    btn.disabled = true;
+    try {
+      if (!state.zipBlob) {
+        const res = await buildZip();
+        state.zipBlob = res.blob; state.zipSkipped = res.skipped;
+      }
+      setMsg(msg, "");
+      await offerFile(baseName() + "-locked.zip", state.zipBlob, msg);
+      if (state.zipSkipped && !msg.textContent) setMsg(msg, state.zipSkipped + " rows weren't included because they aren't ready. See the note at the top of step 2.", "note");
+    } catch (err) {
+      console.error(err);
+      setMsg(msg, "The ZIP couldn't be created: " + (err && err.message ? err.message : err), "err");
+    } finally { btn.disabled = false; }
   });
+
   $("savePwListBtn").addEventListener("click", () => {
-    if (state.pwCsv) offerFile(baseName() + "-passwords.csv", state.pwCsv, $("saveMsg"));
+    assignFileNames();
+    const lines = ["name,email,invoice,amount,file,pages,password"];
+    state.rows.filter((r) => !rowProblem(r)).forEach((r) => {
+      lines.push([r.name, r.email, r.invoice, r.amount, r._file + ".pdf", r.pages, r.password].map(csvEscape).join(","));
+    });
+    offerFile(baseName() + "-passwords.csv", lines.join("\r\n") + "\r\n", $("saveMsg"));
   });
+
+  // ---------- Remembered settings (this device only; never files or details) ----------
+  const SETTINGS_KEY = "split-and-lock-settings-v1";
+  const SETTING_IDS = ["everyN", "extractMode", "extractValue", "namePreset", "customPattern", "docType", "dateFmt", "spaceMode", "emailSubject", "emailBody", "currency"];
+  const DEFAULT_SETTINGS = {};
+  SETTING_IDS.forEach((id) => { DEFAULT_SETTINGS[id] = $(id).value; });
+
+  function saveSettings() {
+    try {
+      const data = {};
+      SETTING_IDS.forEach((id) => { data[id] = $(id).value; });
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(data));
+    } catch (e) { /* storage may be unavailable */ }
+  }
+
+  function applySettings(data) {
+    SETTING_IDS.forEach((id) => { if (data && typeof data[id] === "string") $(id).value = data[id]; });
+    if ($("extractMode").value === "example" || $("extractMode").value === "label") syncExtractLabels();
+    readNaming();
+  }
+
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (raw) applySettings(JSON.parse(raw));
+    } catch (e) { /* ignore unreadable settings */ }
+  }
+
+  $("forgetBtn").addEventListener("click", () => {
+    try { localStorage.removeItem(SETTINGS_KEY); } catch (e) {}
+    applySettings(DEFAULT_SETTINGS);
+    setMsg($("forgetMsg"), "Settings cleared and set back to the defaults.", "ok");
+  });
+
+  let saveTimer = null;
+  SETTING_IDS.forEach((id) => {
+    ["input", "change"].forEach((ev) => $(id).addEventListener(ev, () => {
+      clearTimeout(saveTimer); saveTimer = setTimeout(saveSettings, 400);
+    }));
+  });
+  $("currency").addEventListener("input", () => {
+    document.querySelectorAll("#fileList .fi-meta").forEach((el, i) => {
+      const r = state.rows[i]; if (r && !rowProblem(r)) el.textContent = metaText(r) + ", pages " + r.pages;
+    });
+  });
+
 
   // ---------- File naming controls ----------
   $("docDate").value = todayISO();
@@ -1641,8 +1873,11 @@ Thank you.</textarea>
     document.querySelectorAll("#fileList .fi-meta").forEach((el, i) => { if (state.files[i]) el.textContent = metaText(state.files[i]); });
   });
 
+  loadSettings();
   syncNamingFields();
   renderRows();
+  renderSendList();
+  updateSetupStatus();
 
   // If the libraries fail to load, say so early
   window.addEventListener("load", () => {
