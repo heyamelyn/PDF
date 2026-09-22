@@ -435,10 +435,106 @@
   #sendWarn button { margin-left: 0.3rem; }
   .naming-line { margin: -0.3rem 0 1rem; font-size: 0.925rem; color: var(--ink-soft); overflow-wrap: anywhere; }
   .naming-line b { color: var(--ink); font-weight: 600; }
+  body { padding-bottom: 5.5rem; }
   .version { text-align: center; color: var(--ink-soft); font-size: 0.8rem; margin: 1.25rem 0 0; }
   .text-preview { max-height: 22rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 12px; padding: 0.8rem 0.9rem; font-size: 0.8rem; line-height: 1.5; margin: 0.6rem 0 0; }
   .text-preview[hidden] { display: none; }
   label.btn.primary-soft { background: var(--sage-soft); border-color: var(--sage); }
+  .save-hero {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 1.5rem;
+    margin: 0 0 0.9rem; padding: 1.2rem 1.4rem; border-radius: 20px;
+    background: linear-gradient(135deg, var(--sage-soft), var(--peach-soft) 55%, var(--pink-soft));
+    border: 2px solid var(--peach);
+  }
+  .save-hero h3 { margin: 0; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+  .save-hero p { margin: 0.2rem 0 0; color: var(--ink-soft); font-size: 0.95rem; max-width: 34rem; overflow-wrap: anywhere; }
+  button.primary.big {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 1.15rem; padding: 0.95rem 1.8rem; border-radius: 999px;
+    box-shadow: 0 12px 26px -12px rgba(200, 110, 110, .9);
+  }
+  button.primary.big:disabled { box-shadow: none; }
+  .sticky-save {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; z-index: 20;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    width: min(46rem, calc(100% - 1.5rem));
+    margin-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.7rem 0.8rem 0.7rem 1.3rem; border-radius: 999px;
+    background: var(--surface); box-shadow: 0 12px 34px -10px rgba(90, 50, 60, .45); border: 1px solid var(--line-strong);
+  }
+  .sticky-save[hidden] { display: none; }
+  .sticky-text { flex: 1 1 12rem; font-weight: 600; font-size: 0.95rem; }
+  .sticky-save button.primary { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 1rem; padding: 0.75rem 1.4rem; }
+  @media (max-width: 600px) {
+    .save-hero { padding: 1rem; }
+    button.primary.big { width: 100%; justify-content: center; }
+    .sticky-save { border-radius: 18px; padding: 0.7rem; }
+    .sticky-save button.primary { width: 100%; justify-content: center; }
+    .sticky-text { text-align: center; }
+  }
+  .more-menu { position: relative; margin: 0; padding: 0; background: transparent; box-shadow: none; border-radius: 0; }
+  .more-menu > summary {
+    list-style: none; cursor: pointer; font-weight: 600; font-size: 0.95rem;
+    padding: 0.55rem 1.05rem; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface);
+  }
+  .more-menu > summary::-webkit-details-marker { display: none; }
+  .more-menu > summary::after { content: " \25BE"; color: var(--ink-soft); }
+  .more-menu[open] > summary::after { content: " \25B4"; }
+  .more-items {
+    position: absolute; z-index: 10; top: calc(100% + 0.4rem); left: 0; min-width: 15rem;
+    display: flex; flex-direction: column; gap: 0.2rem; padding: 0.4rem;
+    background: var(--surface); border: 1px solid var(--line-strong); border-radius: 14px; box-shadow: var(--shadow);
+  }
+  .more-items > button, .more-items > label.btn {
+    text-align: left; border: 0; border-radius: 10px; background: transparent; font-weight: 500; padding: 0.55rem 0.75rem; display: block;
+  }
+  .more-items > button:hover, .more-items > label.btn:hover { background: var(--surface-2); }
+  .more-items .danger-text { color: var(--err); }
+  .list-toggle-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  #fileListWrap[hidden] { display: none; }
+  @media (max-width: 600px) { .more-items { left: auto; right: 0; } }
+  .privacy-short, .privacy-tiny { display: none; }
+
+  .change-pdf { margin-left: auto; }
+  body.has-file .masthead {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 1rem;
+    padding: 0.75rem 1.2rem; border-radius: 18px;
+  }
+  body.has-file .masthead h1 { font-size: 1.3rem; margin: 0; }
+  body.has-file .masthead .rule, body.has-file .masthead .lede, body.has-file .masthead .waves, body.has-file .masthead .dots { display: none; }
+  body.has-file .privacy { margin: 0 0 0 auto; padding: 0.35rem 0.85rem; font-size: 0.85rem; align-items: center; }
+  body.has-file .privacy-long { display: none; }
+  body.has-file .privacy-short { display: inline; }
+  body.has-file #step1 { padding: 0.6rem 0.9rem; margin-top: 0.9rem; align-items: center; }
+  body.has-file #step1 .step-num { width: 2rem; height: 2rem; font-size: 0.9rem; }
+  body.has-file #step1 h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  body.has-file #step1 .step-body { grid-row: 1; }
+  body.has-file #drop { display: none; }
+  body.has-file .file-chip { margin-top: 0; padding: 0.35rem 0.4rem; background: transparent; gap: 0.75rem; }
+  body.has-file .file-chip .ring { width: 2.4rem; height: 2.4rem; font-size: 0.85rem;
+    background: radial-gradient(circle, var(--surface) 0 58%, transparent 59%), conic-gradient(var(--sage) 0 55%, var(--peach) 55% 80%, var(--pink) 80% 100%); }
+  body.has-file .file-chip .meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.6rem; }
+  #step1.over { box-shadow: 0 0 0 3px var(--sage), var(--shadow); }
+
+  .pw-card { background: var(--sage-soft); border: 2px solid var(--sage); }
+  .pw-icon { color: var(--sage-deep); }
+  .pw-state { background: var(--surface); color: var(--ink-soft); }
+  .pw-state.same { background: var(--surface); color: var(--ok); }
+  .pw-state.same::before { content: "\2713  "; }
+  @media (max-width: 600px) {
+    body.has-file .masthead { flex-wrap: nowrap; padding: 0.6rem 0.8rem; gap: 0.5rem; }
+    body.has-file .masthead h1 { font-size: 1.05rem; white-space: nowrap; padding-right: 0; }
+    body.has-file .privacy { margin-left: auto; font-size: 0.75rem; padding: 0.3rem 0.6rem; white-space: nowrap; border-radius: 999px; }
+    .change-pdf { white-space: nowrap; padding: 0.45rem 0.8rem; font-size: 0.85rem; }
+    body.has-file #step1 { grid-template-columns: auto 1fr; }
+    body.has-file #step1 .step-num { margin: 0; }
+    body.has-file #step1 .step-body { grid-column: 2; }
+  }
+  @media (max-width: 420px) {
+    body.has-file .privacy-short { display: none; }
+    body.has-file .privacy-tiny { display: inline; }
+    body.has-file .privacy svg { display: none; }
+  }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
   @media (max-width: 600px) {
@@ -476,7 +572,9 @@
     </svg>
     <p class="privacy">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-      <span>Your files never leave this device. Splitting and encryption run in your browser, and nothing is uploaded or saved.</span>
+      <span class="privacy-long">Your files never leave this device. Splitting and encryption run in your browser, and nothing is uploaded or saved.</span>
+      <span class="privacy-short">Files stay on this device</span>
+      <span class="privacy-tiny">On this device only</span>
     </p>
   </header>
 
@@ -486,8 +584,8 @@
       <div class="step-num" aria-hidden="true">1</div>
       <h2 id="h1-step">Choose the combined PDF</h2>
       <div class="step-body">
-        <label class="drop" id="drop">
-          <input type="file" id="pdfInput" accept="application/pdf,.pdf,.csv,text/csv" multiple>
+        <input type="file" id="pdfInput" class="sr-only" accept="application/pdf,.pdf,.csv,text/csv" multiple>
+        <label class="drop" id="drop" for="pdfInput">
           <div><strong>Choose the invoice PDF or drop it here</strong>
           <span>Add your client list CSV at the same time to fill in emails. Files are read on this device only.</span></div>
         </label>
@@ -677,11 +775,16 @@
           <label class="btn primary-soft" for="emailListInput" tabindex="0" id="emailListLabel">Add emails from a client list</label>
           <input type="file" id="emailListInput" accept=".csv,text/csv" class="sr-only">
           <button type="button" class="secondary" id="emailTemplateBtn">Get client list template</button>
-          <button type="button" id="addRowBtn">Add row</button>
-          <label class="btn" for="csvInput" style="display:inline-block" tabindex="0" id="csvLabel">Import from CSV</label>
-          <input type="file" id="csvInput" accept=".csv,text/csv" class="sr-only">
-          <button type="button" id="templateBtn">Get CSV template</button>
-          <button type="button" class="quiet" id="clearBtn">Clear all rows</button>
+          <details class="more-menu" id="moreMenu">
+            <summary>More options</summary>
+            <div class="more-items">
+              <button type="button" id="addRowBtn">Add a row by hand</button>
+              <label class="btn" for="csvInput" tabindex="0" id="csvLabel">Replace rows from a CSV</label>
+              <input type="file" id="csvInput" accept=".csv,text/csv" class="sr-only">
+              <button type="button" id="templateBtn">Get the rows CSV template</button>
+              <button type="button" class="danger-text" id="clearBtn">Clear all rows</button>
+            </div>
+          </details>
         </div>
         <p class="msg" id="tableMsg" role="status" aria-live="polite"></p>
 
@@ -725,16 +828,28 @@ Thank you.</textarea>
             </div>
           </details>
 
+          <div class="save-hero" id="saveHero">
+            <div class="save-hero-text">
+              <h3 id="saveHeroTitle">Save all files</h3>
+              <p id="saveHeroSub">Every locked PDF in one ZIP, ready to file or send.</p>
+            </div>
+            <button type="button" class="primary big" id="saveZipBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg><span id="saveZipLabel">Save all as ZIP</span></button>
+          </div>
           <div class="row send-all">
-            <button type="button" class="primary" id="saveZipBtn">Save all as ZIP</button>
             <button type="button" id="saveDraftsBtn">Save all email drafts</button>
             <button type="button" id="savePwListBtn">Save password list</button>
             <span class="bar-note" id="sentCount"></span>
           </div>
           <div class="progress" id="progress" hidden><div></div></div>
           <p class="msg" id="saveMsg" role="status" aria-live="polite"></p>
-          <p class="hint" id="mailHelp"></p>
-          <ul class="file-list" id="fileList"></ul>
+          <div class="list-toggle-row">
+            <button type="button" id="toggleFilesBtn" aria-expanded="false" aria-controls="fileListWrap">Show individual files</button>
+            <span class="bar-note">To email, save or copy the password for one file at a time.</span>
+          </div>
+          <div id="fileListWrap" hidden>
+            <p class="hint" id="mailHelp"></p>
+            <ul class="file-list" id="fileList"></ul>
+          </div>
         </div>
       </div>
     </section>
@@ -757,7 +872,11 @@ Thank you.</textarea>
         <li>Fillable form fields and some interactive features in the original PDF may not carry over to the split files.</li>
       </ul>
     </details>
-    <p class="version">Version 1.15, 22 September 2026</p>
+    <div class="sticky-save" id="stickySave" hidden>
+      <span class="sticky-text" id="stickyText" role="status" aria-live="polite"></span>
+      <button type="button" class="primary" id="stickyZipBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg><span>Save all as ZIP</span></button>
+    </div>
+    <p class="version">Version 1.18, 22 September 2026</p>
   </main>
 </div>
 
@@ -1007,13 +1126,15 @@ Thank you.</textarea>
   }
 
   // ---------- Step 1: load PDF ----------
-  const drop = $("drop");
-  ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
-  ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+  const drop = $("step1");
+  ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); $("drop").classList.add("over"); }));
+  ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); $("drop").classList.remove("over"); }));
   drop.addEventListener("drop", (e) => {
     const files = e.dataTransfer && e.dataTransfer.files;
     if (files && files.length) loadFiles([...files]);
   });
+  $("drop").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("pdfInput").click(); } });
+  $("drop").tabIndex = 0;
   $("pdfInput").addEventListener("change", (e) => {
     const files = e.target.files ? [...e.target.files] : [];
     e.target.value = "";
@@ -1081,6 +1202,7 @@ Thank you.</textarea>
     state.pageCount = doc.getPageCount();
     $("unlockBox").hidden = true;
     renderFileInfo();
+    document.body.classList.add("has-file");
     $("step1").classList.add("done");
     const n = parseInt($("everyN").value, 10);
     buildEveryN(Number.isFinite(n) && n >= 1 ? n : 2);
@@ -1106,7 +1228,10 @@ Thank you.</textarea>
     const p = document.createElement("span"); p.className = "pages";
     p.textContent = state.pageCount + (state.pageCount === 1 ? " page" : " pages");
     meta.append(b, p);
-    chip.append(ring, meta);
+    const change = document.createElement("button");
+    change.type = "button"; change.className = "change-pdf"; change.textContent = "Change PDF";
+    change.addEventListener("click", () => $("pdfInput").click());
+    chip.append(ring, meta, change);
     box.appendChild(chip);
   }
 
@@ -1248,7 +1373,7 @@ Thank you.</textarea>
 
     $("tableTitle").textContent = view === "all" ? "All " + rowsWord(total)
       : view === "check" ? rowsWord(toCheck) + " to check"
-      : (toCheck ? rowsWord(toCheck) + (toCheck === 1 ? " needs" : " need") + " checking" : "All " + rowsWord(total) + " look complete");
+      : (toCheck ? "To check" : "All " + rowsWord(total) + " look complete");
 
     const showCheck = $("showCheckBtn"), all = $("toggleTable");
     showCheck.hidden = toCheck === 0 || toCheck === total || view === "check";
@@ -1489,11 +1614,9 @@ Thank you.</textarea>
         invalidateResults(); renderRows(); renderSendList(); updateSetupStatus();
         const list = (a) => (a.length === 1 ? "row " : "rows ") + a.slice(0, 8).join(", ") + (a.length > 8 ? " and " + (a.length - 8) + " more" : "");
         let text = "Added email addresses for " + matched + " of " + state.rows.length + " clients.";
-        if (missing.length) text += " No match for " + list(missing) + ".";
-        if (dupNames.size) text += " Some names appear more than once in the list with different emails, so those were only matched by client ID.";
         if (pwCount) text += " Used the list's passwords for " + pwCount + " files.";
-        text += " The list stays on this device and isn't saved.";
-        setMsg(msg, text, missing.length ? "note" : "ok");
+        if (dupNames.size) text += " Clients who share a name were matched by client ID only.";
+        setMsg(msg, text, "ok");
         resolve();
       },
       error: () => { setMsg(msg, "The client list couldn't be read.", "err"); resolve(); },
@@ -2008,33 +2131,16 @@ Thank you.</textarea>
     if (!state.pageCount) { setStatus(status, "Choose a PDF and the details fill in automatically."); return; }
     if (!state.rows.length) { setStatus(status, "No files set up."); return; }
     const total = state.rows.length;
-    const errors = [], noInvoice = [], twoInvoices = [], noEmail = [], noService = [], noMonth = [], dateMonth = [];
-    state.rows.forEach((r, i) => {
-      const n = i + 1;
-      if (rowProblem(r)) errors.push(n);
-      const fl = r._flags || {};
-      if (fl.invoice) noInvoice.push(n);
-      if (fl.pages) twoInvoices.push(n);
-      if (!r.email) noEmail.push(n);
-      if (fl.service) noService.push(n);
-      if (fl.month && r.month) dateMonth.push(n);
-      else if (fl.month) noMonth.push(n);
-    });
-    const list = (a) => (a.length === 1 ? "row " : "rows ") + a.slice(0, 6).join(", ") + (a.length > 6 ? " and " + (a.length - 6) + " more" : "");
-    const parts = [];
-    if (errors.length) parts.push(list(errors) + " can't be created yet (check pages and password)");
-    if (twoInvoices.length) parts.push(list(twoInvoices) + " contain more than one invoice");
-    if (noInvoice.length) parts.push("no invoice number found for " + list(noInvoice));
-    if (noService.length) parts.push("no service found for " + list(noService));
-    if (noMonth.length) parts.push("no month found for " + list(noMonth));
-    if (dateMonth.length) parts.push("no invoice date found, so the month came from the service period for " + list(dateMonth));
-    if (noEmail.length) parts.push("no email address for " + list(noEmail));
-    let text = total + (total === 1 ? " file" : " files") + " ready to send.";
-    if (state.textsRead && state.hasText === false) text += " This PDF has no readable text, probably a scan, so type the details in.";
-    else if (state.textsRead) text += " Details were read from the PDF, so give them a quick check.";
-    if (parts.length) text += " Please check: " + parts.join("; ") + ".";
-    setStatus(status, text, errors.length || twoInvoices.length ? "warn" : (parts.length ? "note" : "ok"));
+    const toCheck = state.rows.filter(rowNeedsCheck).length;
+    const blocked = state.rows.filter((r) => rowProblem(r)).length;
+    let text = total + (total === 1 ? " file" : " files") + " ready";
+    if (state.textsRead && state.hasText === false) text += ". This PDF has no readable text, probably a scan, so type the details in below.";
+    else if (state.textsRead) text += ", with details read from the PDF.";
+    else text += ".";
+    if (toCheck) text += " " + toCheck + (toCheck === 1 ? " row needs" : " rows need") + " a look below.";
+    setStatus(status, text, blocked ? "warn" : (toCheck ? "note" : "ok"));
   }
+
 
   // ---------- Step 3: send ----------
   let sendListTimer = null;
@@ -2163,9 +2269,10 @@ Thank you.</textarea>
     const has = state.rows.length > 0;
     $("sendArea").hidden = !has;
     $("sendEmpty").hidden = has;
-    if (!has) return;
+    if (!has) { if ($("stickySave")) $("stickySave").hidden = true; return; }
     assignFileNames();
     updateNamingLine();
+    updateSaveHero();
     $("mailHelp").textContent = inFrame
       ? "Emails with the PDF attached work on the standalone page. Here, Email without PDF opens a message you attach the file to yourself."
       : "Email with PDF saves a draft with the locked PDF attached. Open it from your downloads to review and send it in Outlook.";
@@ -2264,12 +2371,31 @@ Thank you.</textarea>
       list.appendChild(li);
     });
     updateSentCount();
+    updateFilesToggle();
     queueThumbnails();
   }
+
+  // Close the More options menu after choosing something, or when clicking elsewhere
+  document.querySelectorAll("#moreMenu .more-items > *").forEach((el) => el.addEventListener("click", () => { $("moreMenu").open = false; }));
+  document.addEventListener("click", (e) => { if ($("moreMenu").open && !$("moreMenu").contains(e.target)) $("moreMenu").open = false; });
+
+  function updateFilesToggle() {
+    const open = !!state.filesOpen, n = state.rows.length;
+    $("fileListWrap").hidden = !open;
+    const b = $("toggleFilesBtn");
+    b.setAttribute("aria-expanded", open ? "true" : "false");
+    b.textContent = open ? "Hide individual files" : "Show individual files (" + n + ")";
+  }
+  $("toggleFilesBtn").addEventListener("click", () => {
+    state.filesOpen = !state.filesOpen;
+    updateFilesToggle();
+    if (state.filesOpen) queueThumbnails();
+  });
 
   // ---------- Page previews ----------
   let thumbRun = 0;
   async function queueThumbnails() {
+    if (!state.filesOpen) return;   // previews are only drawn once the list is opened
     const run = ++thumbRun;
     const els = [...document.querySelectorAll("#fileList .thumb")];
     if (!els.length || !state.sourceBytes) return;
@@ -2322,6 +2448,34 @@ Thank you.</textarea>
     return { blob, count: ready.length, skipped: state.rows.length - ready.length };
   }
 
+  // ---------- The main save action: hero card plus a bar that follows while scrolling ----------
+  function updateSaveHero() {
+    const ready = state.rows.filter((r) => !rowProblem(r)).length;
+    const total = state.rows.length;
+    $("saveHeroTitle").textContent = "Save all " + ready + (ready === 1 ? " file" : " files");
+    $("saveHeroSub").textContent = "Every locked PDF in one ZIP, named " + namingDescription() + "." + (ready < total ? " " + (total - ready) + " rows aren't ready and will be left out." : "");
+    $("saveZipLabel").textContent = "Save all " + ready + " as ZIP";
+    $("saveZipBtn").disabled = ready === 0;
+    $("stickyZipBtn").disabled = ready === 0;
+    if (!state.stickyBusy) $("stickyText").textContent = ready + (ready === 1 ? " locked file" : " locked files") + " ready";
+    updateSticky();
+  }
+  let heroVisible = false;
+  function updateSticky() {
+    $("stickySave").hidden = !state.rows.length || heroVisible;
+  }
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => { heroVisible = entries[0].isIntersecting; updateSticky(); }, { threshold: 0.4 }).observe($("saveHero"));
+  }
+  $("stickyZipBtn").addEventListener("click", () => $("saveZipBtn").click());
+  // Show save progress and results in the floating bar too, so they're visible wherever you are on the page
+  new MutationObserver(() => {
+    const t = $("saveMsg").textContent;
+    state.stickyBusy = !!t;
+    if (t) $("stickyText").textContent = t.length > 90 ? t.slice(0, 88) + "…" : t;
+    else updateSaveHero();
+  }).observe($("saveMsg"), { childList: true, characterData: true, subtree: true });
+
   $("saveZipBtn").addEventListener("click", async () => {
     const btn = $("saveZipBtn"); const msg = $("saveMsg");
     assignFileNames();
@@ -2333,6 +2487,7 @@ Thank you.</textarea>
       }
       setMsg(msg, "");
       await offerFile(baseName() + "-locked.zip", state.zipBlob, msg);
+      if (!msg.textContent) setMsg(msg, "Saved " + baseName() + "-locked.zip. Check your downloads folder.", "ok");
       if (state.zipSkipped && !msg.textContent) setMsg(msg, state.zipSkipped + " rows weren't included because they aren't ready. See the note at the top of step 2.", "note");
     } catch (err) {
       console.error(err);
