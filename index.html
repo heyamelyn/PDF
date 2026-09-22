@@ -105,7 +105,7 @@
   }
   h1, h2, h3, .group-title, .ring { font-family: "Outfit", "DM Sans", system-ui, sans-serif; }
   img { max-width: 100%; }
-  .wrap { max-width: 70rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  .wrap { max-width: 78rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
 
   /* Masthead: a soft card with layered pastel waves */
   .masthead {
@@ -257,7 +257,7 @@
   .name-example b { color: var(--ink); font-weight: 600; }
 
   .table-scroll { position: relative; overflow-x: auto; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
-  table { border-collapse: collapse; width: 100%; min-width: 62rem; }
+  table { border-collapse: collapse; width: 100%; min-width: 72rem; }
   th, td { padding: 0.55rem 0.65rem; text-align: left; vertical-align: top; }
   th { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); background: var(--surface-2); }
   tbody tr + tr td { border-top: 1px solid var(--line); }
@@ -309,7 +309,7 @@
   }
   #emailBar { background: var(--pink-soft); margin-bottom: 1.1rem; }
   #extractBar { background: var(--surface-2); }
-  .extract-fields { grid-template-columns: minmax(12rem, 1.2fr) minmax(10rem, 1fr) auto; align-items: end; }
+  .extract-fields { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); align-items: end; }
   .extract-go button { white-space: nowrap; }
   @media (max-width: 600px) { .extract-fields { grid-template-columns: 1fr; } .extract-go > span { display: none; } }
   #emailBar .naming-fields { grid-template-columns: minmax(0, 3fr) minmax(7rem, 1fr); }
@@ -380,13 +380,15 @@
   }
   #step2 table { table-layout: fixed; }
   #step2 th:nth-child(1) { width: 2.6rem; }
-  #step2 th:nth-child(2) { width: 17%; }
-  #step2 th:nth-child(3) { width: 22%; }
-  #step2 th:nth-child(4) { width: 16%; }
-  #step2 th:nth-child(5) { width: 10%; }
-  #step2 th:nth-child(6) { width: 8%; }
-  #step2 th:nth-child(7) { width: 17%; }
-  #step2 th:nth-child(8) { width: 2.9rem; }
+  #step2 th:nth-child(2) { width: 13%; }
+  #step2 th:nth-child(3) { width: 17%; }
+  #step2 th:nth-child(4) { width: 13%; }
+  #step2 th:nth-child(5) { width: 9%; }
+  #step2 th:nth-child(6) { width: 17%; }
+  #step2 th:nth-child(7) { width: 8%; }
+  #step2 th:nth-child(8) { width: 6%; }
+  #step2 th:nth-child(9) { width: 13%; }
+  #step2 th:nth-child(10) { width: 2.9rem; }
   #step2 td input { font-size: 0.9rem; padding: 0.45rem 0.55rem; }
   #step2 th, #step2 td { padding-left: 0.35rem; padding-right: 0.35rem; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
@@ -474,7 +476,7 @@
         <div class="toolbar" id="extractBar">
           <div class="row">
             <span class="group-title">Reading the PDF</span>
-            <span class="bar-note">Invoice numbers, amounts, email addresses and names are read automatically. Change how invoice numbers are found here.</span>
+            <span class="bar-note">Names, services, invoice numbers, months, amounts and email addresses are read automatically. Change the labels here if your invoices use different wording.</span>
           </div>
           <div class="naming-fields extract-fields">
             <label class="field" for="extractMode">Find invoice numbers by
@@ -485,6 +487,12 @@
             </label>
             <label class="field" for="extractValue"><span id="extractValueLabel">Label</span>
               <input type="text" id="extractValue" value="Invoice No" autocomplete="off" spellcheck="false">
+            </label>
+            <label class="field" for="serviceLabel">Service label
+              <input type="text" id="serviceLabel" value="Service" autocomplete="off" spellcheck="false">
+            </label>
+            <label class="field" for="monthLabel">Month label
+              <input type="text" id="monthLabel" value="Service Period" autocomplete="off" spellcheck="false">
             </label>
             <div class="field extract-go">
               <span aria-hidden="true">&nbsp;</span>
@@ -497,7 +505,8 @@
           <div class="row">
             <label class="group-title" for="namePreset">File names</label>
             <select id="namePreset">
-              <option value="{invoice}_{name}" selected>Invoice no. and name</option>
+              <option value="{name}_{service}_{invoice}_{month}" selected>Name, service, invoice no., month</option>
+              <option value="{invoice}_{name}">Invoice no. and name</option>
               <option value="{date}_{invoice}_{name}">Date, invoice no., name</option>
               <option value="{name}">Name only</option>
               <option value="{date}_{doc}_{name}">Date, document, name</option>
@@ -520,6 +529,15 @@
                 <option value="month">YYYY-MM</option>
               </select>
             </label>
+            <label class="field" for="monthFmt">Month style
+              <select id="monthFmt">
+                <option value="mon-yyyy">Sep 2026</option>
+                <option value="mon">Sep</option>
+                <option value="month-yyyy">September 2026</option>
+                <option value="yyyy-mm">2026-09</option>
+                <option value="yyyymm">202609</option>
+              </select>
+            </label>
             <label class="field" for="spaceMode">Spaces in names
               <select id="spaceMode">
                 <option value="-">Replace with -</option>
@@ -530,9 +548,9 @@
           </div>
           <div class="custom-row" id="customRow" hidden>
             <label class="field" for="customPattern">Custom format
-              <input type="text" id="customPattern" value="{doc}_{invoice}_{name}" autocomplete="off" spellcheck="false">
+              <input type="text" id="customPattern" value="{name}_{service}_{invoice}_{month}" autocomplete="off" spellcheck="false">
             </label>
-            <p class="tokens">Click to insert: <code data-token="{name}">{name}</code> <code data-token="{invoice}">{invoice}</code> <code data-token="{doc}">{doc}</code> <code data-token="{date}">{date}</code> <code data-token="{nn}">{nn}</code> for 01, 02 and so on, <code data-token="{pages}">{pages}</code> <code data-token="{source}">{source}</code></p>
+            <p class="tokens">Click to insert: <code data-token="{name}">{name}</code> <code data-token="{service}">{service}</code> <code data-token="{invoice}">{invoice}</code> <code data-token="{month}">{month}</code> <code data-token="{doc}">{doc}</code> <code data-token="{date}">{date}</code> <code data-token="{nn}">{nn}</code> for 01, 02 and so on, <code data-token="{pages}">{pages}</code> <code data-token="{source}">{source}</code></p>
           </div>
           <p class="name-example">First file saves as <b id="nameExample">—</b></p>
         </div>
@@ -563,8 +581,10 @@
               <tr>
                 <th scope="col"><span class="sr-only">Row</span></th>
                 <th scope="col">Name</th>
-                <th scope="col">Email</th>
+                <th scope="col">Service</th>
                 <th scope="col">Invoice no.</th>
+                <th scope="col">Month</th>
+                <th scope="col">Email</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Pages</th>
                 <th scope="col">Password</th>
@@ -609,13 +629,13 @@
             <label class="field" for="emailBody">Message
               <textarea id="emailBody" spellcheck="true">Dear {name},
 
-Please find attached invoice {invoice} for {amount}.
+Please find attached invoice {invoice} for {service}, {month}, for {amount}.
 
 The attachment is password-protected. The password will be sent to you separately.
 
 Thank you.</textarea>
             </label>
-            <p class="tokens" id="emailTokens">Click to insert: <code data-etoken="{name}">{name}</code> <code data-etoken="{invoice}">{invoice}</code> <code data-etoken="{amount}">{amount}</code> <code data-etoken="{file}">{file}</code></p>
+            <p class="tokens" id="emailTokens">Click to insert: <code data-etoken="{name}">{name}</code> <code data-etoken="{service}">{service}</code> <code data-etoken="{invoice}">{invoice}</code> <code data-etoken="{month}">{month}</code> <code data-etoken="{amount}">{amount}</code> <code data-etoken="{file}">{file}</code></p>
             </div>
           </details>
 
@@ -637,7 +657,7 @@ Thank you.</textarea>
       <p>This page uses open-source libraries (pdf-lib, PDF.js, JSZip and Papa Parse) that run entirely in your browser. Your PDF, the details and the passwords stay in this tab and are cleared when you close or reload it.</p>
       <ul>
         <li>Recipients need the password to open their file. Most PDF readers support AES-256, including Adobe Acrobat Reader, Chrome, Edge, and the built-in readers on iPhone and Android.</li>
-        <li>Invoice numbers, amounts (from the "Total" line), email addresses and names (after "Bill To" or "Attention") are read from the PDF's text. Email addresses that appear on most invoices are treated as your own and skipped. Always check the details before sending, especially highlighted fields. Scanned PDFs have no readable text, so details need to be typed in.</li>
+        <li>Names (after "Bill To" or "Attention"), services (after "Service:" or "Programme:"), invoice numbers, months (from "Service Period" or similar, otherwise the invoice date), amounts (from the "Total" line) and email addresses are read from the PDF's text. Email addresses that appear on most invoices are treated as your own and skipped. Always check the details before sending, especially highlighted fields. Scanned PDFs have no readable text, so details need to be typed in.</li>
         <li>Your settings, like the email message and file name format, are remembered in this browser only. PDFs, names, email addresses and passwords are never saved. Use Forget my settings under Customise to clear them.</li>
         <li>CSV files can have the columns <code>name</code>, <code>email</code>, <code>invoice</code>, <code>amount</code>, <code>pages</code> and <code>password</code>. Only <code>pages</code> is required.</li>
         <li>Email with PDF creates an email file with the locked PDF attached. Classic Outlook for Windows and Apple Mail open it as a new message ready to send. Other email apps may open it as a received message instead, so test one first.</li>
@@ -665,7 +685,7 @@ Thank you.</textarea>
     pageCount: 0,
     rows: [],          // {name, pages, password}
     files: [],
-    naming: { pattern: "{invoice}_{name}", preset: "{invoice}_{name}", doc: "", date: "", dateFmt: "iso", spaces: "-" },
+    naming: { pattern: "{name}_{service}_{invoice}_{month}", preset: "{name}_{service}_{invoice}_{month}", doc: "", date: "", dateFmt: "iso", spaces: "-" },
     zipBlob: null,
     zipName: "",
     pwCsv: "",
@@ -839,6 +859,8 @@ Thank you.</textarea>
     const values = {
       name: String(r.name || "").trim(),
       invoice: String(r.invoice || "").trim(),
+      service: String(r.service || "").trim(),
+      month: formatMonth(r.month, $("monthFmt").value),
       doc: nm.doc.trim(),
       date: formatDate(nm.date, nm.dateFmt),
       nn: nn,
@@ -846,12 +868,12 @@ Thank you.</textarea>
       pages: String(r.pages || "").replace(/\s+/g, ""),
       source: baseName(),
     };
-    let pattern = nm.pattern || "{invoice}_{name}";
+    let pattern = nm.pattern || "{name}_{service}_{invoice}_{month}";
     // Rows with nothing that identifies them fall back to the original file name and number
     const identifies = (/\{name\}/.test(pattern) && values.name) || (/\{invoice\}/.test(pattern) && values.invoice) ||
       /\{(nn|n|pages|source)\}/.test(pattern);
     if (!identifies) pattern = pattern + "_{source}_{nn}";
-    const filled = pattern.replace(/\{(name|invoice|doc|date|nn|n|pages|source)\}/g, (_, k) => values[k]);
+    const filled = pattern.replace(/\{(name|service|invoice|month|doc|date|nn|n|pages|source)\}/g, (_, k) => values[k]);
     return cleanFileName(filled, nm.spaces) || cleanFileName(values.source + "_" + nn, nm.spaces);
   }
 
@@ -998,8 +1020,8 @@ Thank you.</textarea>
   }
 
   // ---------- Step 2: rows ----------
-  const COLS = 8;
-  const AUTO_FIELDS = ["name", "email", "invoice", "amount"];
+  const COLS = 10;
+  const AUTO_FIELDS = ["name", "service", "invoice", "month", "email", "amount"];
 
   function cellInput(r, field, opts) {
     const td = document.createElement("td");
@@ -1007,6 +1029,7 @@ Thank you.</textarea>
     const inp = document.createElement("input");
     inp.type = opts.type || "text";
     inp.value = r[field] || "";
+    inp.title = inp.value;
     inp.dataset.field = field;
     if (opts.placeholder) inp.placeholder = opts.placeholder;
     if (opts.inputMode) inp.inputMode = opts.inputMode;
@@ -1015,6 +1038,7 @@ Thank you.</textarea>
     inp.setAttribute("aria-label", opts.label);
     inp.addEventListener("input", () => {
       r[field] = inp.value;
+      inp.title = inp.value;
       if (r._auto) r._auto[field] = false;
       if (r._flags) delete r._flags[field];
       inp.classList.remove("invalid", "check");
@@ -1047,8 +1071,10 @@ Thank you.</textarea>
       const nSr = document.createElement("span"); nSr.className = "sr-only"; nSr.textContent = "Row " + n; tdN.appendChild(nSr);
 
       const tdName = cellInput(r, "name", { cls: "name-cell", placeholder: "Recipient or label", label: "Name for row " + n, preview: true });
-      const tdEmail = cellInput(r, "email", { cls: "email-cell", type: "email", placeholder: "name@example.com", label: "Email for row " + n, nospell: true });
+      const tdService = cellInput(r, "service", { placeholder: "e.g. Home Care", label: "Service for row " + n, preview: true });
       const tdInv = cellInput(r, "invoice", { cls: "inv-cell", placeholder: "INV-001", label: "Invoice number for row " + n, preview: true, nospell: true });
+      const tdMonth = cellInput(r, "month", { placeholder: "Sep 2026", label: "Month for row " + n, preview: true, nospell: true });
+      const tdEmail = cellInput(r, "email", { cls: "email-cell", type: "email", placeholder: "name@example.com", label: "Email for row " + n, nospell: true });
       const tdAmt = cellInput(r, "amount", { cls: "amt-cell", placeholder: "0.00", label: "Amount for row " + n, inputMode: "decimal", nospell: true });
       const tdPages = cellInput(r, "pages", { cls: "pages-cell", label: "Pages for row " + n, inputMode: "numeric", preview: true, nospell: true });
       const tdPw = cellInput(r, "password", { cls: "pw-cell", label: "Password for row " + n, nospell: true });
@@ -1060,7 +1086,7 @@ Thank you.</textarea>
       del.addEventListener("click", () => { state.rows.splice(i, 1); invalidateResults(); renderRows(); updateSetupStatus(); });
       tdAct.appendChild(del);
 
-      tr.append(tdN, tdName, tdEmail, tdInv, tdAmt, tdPages, tdPw, tdAct);
+      tr.append(tdN, tdName, tdService, tdInv, tdMonth, tdEmail, tdAmt, tdPages, tdPw, tdAct);
       tr.dataset.index = i;
       tbody.appendChild(tr);
 
@@ -1076,7 +1102,7 @@ Thank you.</textarea>
   }
 
   function blankRow(pages) {
-    return { name: "", email: "", invoice: "", amount: "", pages: pages || "", password: "", _auto: {}, _flags: {} };
+    return { name: "", service: "", invoice: "", month: "", email: "", amount: "", pages: pages || "", password: "", _auto: {}, _flags: {} };
   }
 
   // Rebuild page ranges; details typed by hand stay with their row, details read from the PDF are read again
@@ -1180,6 +1206,8 @@ Thank you.</textarea>
         const kEmail = pick(["email", "e-mail", "email address", "to"]);
         const kInv = pick(["invoice", "invoice no", "invoice no.", "invoice number", "invoice #", "inv", "inv no", "inv no."]);
         const kAmt = pick(["amount", "total", "amount due", "invoice amount"]);
+        const kService = pick(["service", "services", "service type", "programme", "program"]);
+        const kMonth = pick(["month", "mth", "service month", "period", "service period", "billing month"]);
         const kPages = pick(["pages", "page", "page range", "range"]);
         const kPw = pick(["password", "pw", "pass"]);
         if (!kPages) { setMsg(msg, "The CSV needs a \"pages\" column. Get the template to see the format.", "err"); return; }
@@ -1188,6 +1216,8 @@ Thank you.</textarea>
           name: get(d, kName),
           email: get(d, kEmail),
           invoice: get(d, kInv),
+          service: get(d, kService),
+          month: get(d, kMonth),
           amount: get(d, kAmt),
           password: kPw ? String(d[kPw] == null ? "" : d[kPw]) : "",
         })).filter((r) => r.pages || r.name || r.invoice);
@@ -1201,7 +1231,7 @@ Thank you.</textarea>
   });
 
   $("templateBtn").addEventListener("click", () => {
-    const csv = "name,email,invoice,amount,pages,password\r\nRecipient A,a@example.com,INV-001,120.00,1-2,\r\nRecipient B,b@example.com,INV-002,85.50,3-4,\r\nRecipient C,c@example.com,INV-003,240.00,5-6,\r\n";
+    const csv = "name,service,invoice,month,email,amount,pages,password\r\nRecipient A,Home Care,INV-001,Sep 2026,a@example.com,120.00,1-2,\r\nRecipient B,Day Care,INV-002,Sep 2026,b@example.com,85.50,3-4,\r\nRecipient C,Counselling,INV-003,Sep 2026,c@example.com,240.00,5-6,\r\n";
     offerFile("split-and-lock-template.csv", csv, $("tableMsg"));
   });
 
@@ -1321,6 +1351,95 @@ Thank you.</textarea>
     return s.slice(0, 60);
   }
 
+  // ---------- Service and month ----------
+  const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+  const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const MON_RE = "(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)";
+  const monIndex = (s) => MONTHS.indexOf(s.slice(0, 3).toLowerCase());
+  const fullYear = (y) => { const n = parseInt(y, 10); return y.length === 2 ? 2000 + n : n; };
+
+  // Finds the first month mentioned in a piece of text. Returns { y, m } (m is 1-12) or null.
+  function parseMonth(text) {
+    if (!text) return null;
+    const s = String(text);
+    const found = [];
+    const add = (re, fn) => { const m = s.match(re); if (m) { const v = fn(m); if (v && v.m >= 1 && v.m <= 12 && v.y > 1990 && v.y < 2100) found.push({ at: m.index, v }); } };
+    // 16 Sep 2026, 16th September 2026
+    add(new RegExp("\\b\\d{1,2}(?:st|nd|rd|th)?[\\s\\-]+" + MON_RE + "\\.?[\\s\\-,]+(\\d{4})\\b", "i"), (m) => ({ y: +m[2], m: monIndex(m[1]) + 1 }));
+    // Sep 2026, September 2026, Sep-26, Sep'26
+    add(new RegExp("\\b" + MON_RE + "\\.?[\\s\\-',]*(\\d{4}|\\d{2})\\b", "i"), (m) => ({ y: fullYear(m[2]), m: monIndex(m[1]) + 1 }));
+    // 2026-09 or 2026-09-16
+    add(/\b(\d{4})[\/\-.](\d{1,2})(?:[\/\-.]\d{1,2})?\b/, (m) => ({ y: +m[1], m: +m[2] }));
+    // 16/09/2026 (day first, as used in Singapore); 09/16/2026 is read month first because 16 can't be a month
+    add(/\b(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})\b/, (m) => {
+      const a = +m[1], b = +m[2];
+      return { y: +m[3], m: b > 12 && a <= 12 ? a : b };
+    });
+    // 09/2026
+    add(/\b(\d{1,2})[\/\-.](\d{4})\b/, (m) => ({ y: +m[2], m: +m[1] }));
+    if (!found.length) return null;
+    found.sort((a, b) => a.at - b.at);
+    return found[0].v;
+  }
+
+  function formatMonth(raw, style) {
+    const p = parseMonth(raw);
+    if (!p) return String(raw || "").trim();
+    const short = MONTH_NAMES[p.m - 1].slice(0, 3);
+    const mm = String(p.m).padStart(2, "0");
+    switch (style) {
+      case "mon": return short;
+      case "month-yyyy": return MONTH_NAMES[p.m - 1] + " " + p.y;
+      case "yyyy-mm": return p.y + "-" + mm;
+      case "yyyymm": return p.y + mm;
+      default: return short + " " + p.y;
+    }
+  }
+
+  const MONTH_LABELS = ["Service Period", "Billing Period", "Service Month", "Billing Month", "For the month of", "Period", "Month"];
+  const DATE_LABELS = ["Invoice Date", "Date of Invoice", "Date"];
+
+  function labelPattern(label) {
+    return label.trim().replace(/[.:#]+$/g, "").split(/\s+/).map(escapeRe).join("\\s+");
+  }
+
+  // Service month: after a period or month label; otherwise the invoice date's month (flagged for checking)
+  function findMonth(text, customLabel) {
+    const labels = (customLabel ? [customLabel] : []).concat(MONTH_LABELS.filter((l) => !customLabel || l.toLowerCase() !== customLabel.toLowerCase()));
+    for (const l of labels) {
+      const re = new RegExp("(?<![A-Za-z])" + labelPattern(l) + "(?![A-Za-z])\\s*[:\\-]?\\s*([^\\n]{0,60})", "gi");
+      for (const m of text.matchAll(re)) {
+        const p = parseMonth(m[1]);
+        if (p) return { value: MONTH_NAMES[p.m - 1].slice(0, 3) + " " + p.y, fromDate: false };
+      }
+    }
+    for (const l of DATE_LABELS) {
+      const re = new RegExp("(?<![A-Za-z])" + labelPattern(l) + "(?![A-Za-z])\\s*[:\\-]?\\s*([^\\n]{0,40})", "gi");
+      for (const m of text.matchAll(re)) {
+        const p = parseMonth(m[1]);
+        if (p) return { value: MONTH_NAMES[p.m - 1].slice(0, 3) + " " + p.y, fromDate: true };
+      }
+    }
+    return null;
+  }
+
+  const SERVICE_LABELS = ["Service Type", "Service", "Services", "Programme", "Program", "Description of Service"];
+  const STOP_WORDS = "invoice|date|period|month|amount|qty|quantity|rate|price|total|bill|email|e-mail|tel|phone|page|ref|reference|gst|uen";
+
+  // Service: the text after a "Service:" style label, on the same line
+  function findService(text, customLabel) {
+    const labels = (customLabel ? [customLabel] : []).concat(SERVICE_LABELS.filter((l) => !customLabel || l.toLowerCase() !== customLabel.toLowerCase()));
+    for (const l of labels) {
+      const re = new RegExp("(?<![A-Za-z])" + labelPattern(l) + "(?!\\s*(?:period|month|date|charge|fee|tax)\\b)\\s*[:\\-]\\s*([^\\n]{2,90})", "gi");
+      for (const m of text.matchAll(re)) {
+        let v = m[1].split(new RegExp("\\s{3,}|\\s+(?:" + STOP_WORDS + ")\\b\\s*[:#]?", "i"))[0];
+        v = v.replace(/[,;:|\-]+\s*$/, "").trim();
+        if (v.length >= 2 && /[A-Za-z]/.test(v) && !/@/.test(v)) return v.slice(0, 60);
+      }
+    }
+    return "";
+  }
+
   async function readDetailsFromPdf(opts) {
     opts = opts || {};
     const status = $("setupStatus");
@@ -1376,8 +1495,21 @@ Thank you.</textarea>
       const email = findEmails(text).find((e) => !senderEmails.has(e)) || "";
       fill("email", email);
       if (!r.email) r._flags.email = "check";
+      // With fewer than 3 invoices the sender's own address can't be told apart, so ask for a check
+      else if (r._auto.email && state.rows.length < 3) r._flags.email = "check";
 
       fill("name", findName(text));
+
+      if (canFill("service")) {
+        fill("service", findService(text, $("serviceLabel").value.trim()));
+        if (!r.service) r._flags.service = "check";
+      }
+      if (canFill("month")) {
+        const mo = findMonth(text, $("monthLabel").value.trim());
+        fill("month", mo ? mo.value : "");
+        if (!mo) r._flags.month = "check";
+        else if (mo.fromDate) { r._flags.month = "check"; r._monthFromDate = true; }
+      }
     });
   }
 
@@ -1428,7 +1560,7 @@ Thank you.</textarea>
     if (!state.pageCount) { setStatus(status, "Choose a PDF and the details fill in automatically."); return; }
     if (!state.rows.length) { setStatus(status, "No files set up."); return; }
     const total = state.rows.length;
-    const errors = [], noInvoice = [], twoInvoices = [], noEmail = [];
+    const errors = [], noInvoice = [], twoInvoices = [], noEmail = [], noService = [], noMonth = [], dateMonth = [];
     state.rows.forEach((r, i) => {
       const n = i + 1;
       if (rowProblem(r)) errors.push(n);
@@ -1436,12 +1568,18 @@ Thank you.</textarea>
       if (fl.invoice) noInvoice.push(n);
       if (fl.pages) twoInvoices.push(n);
       if (!r.email) noEmail.push(n);
+      if (fl.service) noService.push(n);
+      if (fl.month && r.month) dateMonth.push(n);
+      else if (fl.month) noMonth.push(n);
     });
     const list = (a) => (a.length === 1 ? "row " : "rows ") + a.slice(0, 6).join(", ") + (a.length > 6 ? " and " + (a.length - 6) + " more" : "");
     const parts = [];
     if (errors.length) parts.push(list(errors) + " can't be created yet (check pages and password)");
     if (twoInvoices.length) parts.push(list(twoInvoices) + " contain more than one invoice");
     if (noInvoice.length) parts.push("no invoice number found for " + list(noInvoice));
+    if (noService.length) parts.push("no service found for " + list(noService));
+    if (noMonth.length) parts.push("no month found for " + list(noMonth));
+    if (dateMonth.length) parts.push("month taken from the invoice date for " + list(dateMonth));
     if (noEmail.length) parts.push("no email address for " + list(noEmail));
     let text = total + (total === 1 ? " file" : " files") + " ready to send.";
     if (state.textsRead && state.hasText === false) text += " This PDF has no readable text, probably a scan, so type the details in.";
@@ -1485,6 +1623,7 @@ Thank you.</textarea>
     const bytes = await ensureFile(r);
     return {
       name: (r.name || "").trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(),
+      service: (r.service || "").trim(), month: (r.month || "").trim(),
       amount: (r.amount || "").trim(), password: r.password, fileName: r._file + ".pdf", bytes,
     };
   }
@@ -1505,9 +1644,9 @@ Thank you.</textarea>
   }
 
   function fillEmailTemplate(text, f) {
-    const values = { name: f.name, invoice: f.invoice, amount: formatAmount(f.amount), file: f.fileName };
+    const values = { name: f.name, service: f.service || "", invoice: f.invoice, month: formatMonth(f.month, "month-yyyy"), amount: formatAmount(f.amount), file: f.fileName };
     return String(text || "")
-      .replace(/\{(name|invoice|amount|file)\}/g, (_, k) => values[k] || "")
+      .replace(/\{(name|service|invoice|month|amount|file)\}/g, (_, k) => values[k] || "")
       .replace(/[ \t]+([,.;:])/g, "$1")
       .replace(/[ \t]{2,}/g, " ");
   }
@@ -1552,7 +1691,9 @@ Thank you.</textarea>
   function metaText(r) {
     const parts = [];
     parts.push(r.email ? "To " + r.email.trim() : "No email address");
+    if (r.service) parts.push(r.service.trim());
     if (r.invoice) parts.push("Invoice " + r.invoice.trim());
+    if (r.month) parts.push(formatMonth(r.month, "mon-yyyy"));
     if (r.amount) parts.push(formatAmount(r.amount));
     return parts.join(", ");
   }
@@ -1638,7 +1779,7 @@ Thank you.</textarea>
       });
 
       mk("Email without PDF", "", "Email without attachment for " + r._file, () => {
-        const f = { name: (r.name || "").trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(), amount: (r.amount || "").trim(), fileName: r._file + ".pdf" };
+        const f = { name: (r.name || "").trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(), service: (r.service || "").trim(), month: (r.month || "").trim(), amount: (r.amount || "").trim(), fileName: r._file + ".pdf" };
         const subject = fillEmailTemplate($("emailSubject").value, f).replace(/[\r\n]+/g, " ").trim();
         const body = fillEmailTemplate($("emailBody").value, f);
         const href = "mailto:" + (f.email && EMAIL_RE.test(f.email) ? encodeURIComponent(f.email).replace(/%40/g, "@") : "") +
@@ -1752,16 +1893,16 @@ Thank you.</textarea>
 
   $("savePwListBtn").addEventListener("click", () => {
     assignFileNames();
-    const lines = ["name,email,invoice,amount,file,pages,password"];
+    const lines = ["name,service,invoice,month,email,amount,file,pages,password"];
     state.rows.filter((r) => !rowProblem(r)).forEach((r) => {
-      lines.push([r.name, r.email, r.invoice, r.amount, r._file + ".pdf", r.pages, r.password].map(csvEscape).join(","));
+      lines.push([r.name, r.service, r.invoice, formatMonth(r.month, "mon-yyyy"), r.email, r.amount, r._file + ".pdf", r.pages, r.password].map(csvEscape).join(","));
     });
     offerFile(baseName() + "-passwords.csv", lines.join("\r\n") + "\r\n", $("saveMsg"));
   });
 
   // ---------- Remembered settings (this device only; never files or details) ----------
   const SETTINGS_KEY = "split-and-lock-settings-v1";
-  const SETTING_IDS = ["everyN", "extractMode", "extractValue", "namePreset", "customPattern", "docType", "dateFmt", "spaceMode", "emailSubject", "emailBody", "currency"];
+  const SETTING_IDS = ["everyN", "extractMode", "extractValue", "serviceLabel", "monthLabel", "namePreset", "customPattern", "docType", "dateFmt", "monthFmt", "spaceMode", "emailSubject", "emailBody", "currency"];
   const DEFAULT_SETTINGS = {};
   SETTING_IDS.forEach((id) => { DEFAULT_SETTINGS[id] = $(id).value; });
 
@@ -1782,7 +1923,13 @@ Thank you.</textarea>
   function loadSettings() {
     try {
       const raw = localStorage.getItem(SETTINGS_KEY);
-      if (raw) applySettings(JSON.parse(raw));
+      if (raw) {
+        const data = JSON.parse(raw);
+        // Move people on the old default to the new Name_Service_InvoiceNo_Month format
+        if (data.namePreset === "{invoice}_{name}") data.namePreset = "{name}_{service}_{invoice}_{month}";
+        if (data.emailBody && /Please find attached invoice \{invoice\} for \{amount\}\./.test(data.emailBody)) delete data.emailBody;
+        applySettings(data);
+      }
     } catch (e) { /* ignore unreadable settings */ }
   }
 
@@ -1815,6 +1962,7 @@ Thank you.</textarea>
     $("docType").disabled = !usesDoc;
     $("docDate").disabled = !usesDate;
     $("dateFmt").disabled = !usesDate;
+    $("monthFmt").disabled = !/\{month\}/.test(pat);
   }
 
   function readNaming() {
@@ -1830,7 +1978,7 @@ Thank you.</textarea>
     invalidateResults();
     updatePreviews();
   }
-  ["namePreset", "dateFmt", "spaceMode", "docDate"].forEach((id) => $(id).addEventListener("change", readNaming));
+  ["namePreset", "dateFmt", "monthFmt", "spaceMode", "docDate"].forEach((id) => $(id).addEventListener("change", readNaming));
   ["docType", "customPattern", "docDate"].forEach((id) => $(id).addEventListener("input", readNaming));
   $("namePreset").addEventListener("change", () => {
     if ($("namePreset").value === "custom") $("customPattern").focus();
