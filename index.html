@@ -334,6 +334,15 @@
   .file-item button { font-size: 0.875rem; padding: 0.45rem 0.8rem; }
   .file-item button.mail { background: var(--sage); border-color: transparent; color: var(--btn-ink); }
   .file-item button.mail:hover { filter: brightness(1.04); }
+  .file-item button.save {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.95rem; padding: 0.55rem 1.05rem;
+    background: linear-gradient(120deg, var(--peach), var(--pink));
+    color: var(--btn-ink); border-color: transparent;
+    box-shadow: 0 6px 14px -8px rgba(200, 120, 120, .8);
+  }
+  .file-item button.save:hover { filter: brightness(1.04) saturate(1.05); border-color: transparent; }
+  .file-item button.save:disabled { box-shadow: none; }
   .file-item.sent { box-shadow: inset 4px 0 0 var(--sage); }
   .list-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; align-items: baseline; margin-top: 1.3rem; }
   .list-head h4 { margin: 0; font-family: "Outfit", "DM Sans", sans-serif; font-weight: 600; font-size: 1.05rem; }
@@ -492,6 +501,7 @@
   .more-items .danger-text { color: var(--err); }
   .list-toggle-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
   #fileListWrap[hidden] { display: none; }
+  .list-title { margin: 0; font-family: "Outfit", "DM Sans", sans-serif; font-weight: 600; font-size: 1.05rem; }
   @media (max-width: 600px) { .more-items { left: auto; right: 0; } }
   .privacy-short, .privacy-tiny { display: none; }
 
@@ -843,10 +853,10 @@ Thank you.</textarea>
           <div class="progress" id="progress" hidden><div></div></div>
           <p class="msg" id="saveMsg" role="status" aria-live="polite"></p>
           <div class="list-toggle-row">
-            <button type="button" id="toggleFilesBtn" aria-expanded="false" aria-controls="fileListWrap">Show individual files</button>
-            <span class="bar-note">To email, save or copy the password for one file at a time.</span>
+            <h3 class="list-title" id="filesTitle">Individual files</h3>
+            <span class="bar-note">Save, email or copy the password for one file at a time.</span>
           </div>
-          <div id="fileListWrap" hidden>
+          <div id="fileListWrap">
             <p class="hint" id="mailHelp"></p>
             <ul class="file-list" id="fileList"></ul>
           </div>
@@ -2274,7 +2284,7 @@ Thank you.</textarea>
     updateNamingLine();
     updateSaveHero();
     $("mailHelp").textContent = inFrame
-      ? "Emails with the PDF attached work on the standalone page. Here, Email without PDF opens a message you attach the file to yourself."
+      ? "Save PDF saves the locked file. Emails with the PDF attached work on the standalone page."
       : "Email with PDF saves a draft with the locked PDF attached. Open it from your downloads to review and send it in Outlook.";
 
     state.rows.forEach((r, i) => {
@@ -2312,6 +2322,14 @@ Thank you.</textarea>
         return b;
       };
 
+      const saveBtn = mk("Save PDF", "save", "Save " + r._file + ".pdf", async () => {
+        try {
+          const bytes = await ensureFile(r);
+          offerFile(r._file + ".pdf", new Blob([bytes], { type: "application/pdf" }), status);
+        } catch (err) { itemStatus(status, "The file couldn't be created: " + (err && err.message ? err.message : err), true); }
+      });
+      saveBtn.insertAdjacentHTML("afterbegin", '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>');
+
       mk("Email with PDF", "mail", "Email with PDF attached for " + r._file, async () => {
         if (inFrame) {
           status.className = "fi-status err";
@@ -2332,26 +2350,6 @@ Thank you.</textarea>
           console.error(err);
           itemStatus(status, "The draft couldn't be created: " + (err && err.message ? err.message : err), true);
         }
-      });
-
-      mk("Email without PDF", "", "Email without attachment for " + r._file, () => {
-        const f = { name: (r.name || "").trim(), email: (r.email || "").trim(), invoice: (r.invoice || "").trim(), service: (r.service || "").trim(), month: (r.month || "").trim(), amount: (r.amount || "").trim(), fileName: r._file + ".pdf" };
-        const subject = fillEmailTemplate($("emailSubject").value, f).replace(/[\r\n]+/g, " ").trim();
-        const body = fillEmailTemplate($("emailBody").value, f);
-        const href = "mailto:" + (f.email && EMAIL_RE.test(f.email) ? encodeURIComponent(f.email).replace(/%40/g, "@") : "") +
-          "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body.replace(/\r?\n/g, "\r\n"));
-        const a = document.createElement("a");
-        a.href = href; a.target = inFrame ? "_blank" : "_self"; a.rel = "noopener";
-        document.body.appendChild(a); a.click(); a.remove();
-        itemStatus(status, "Opened an email without the attachment. Use Save PDF and attach " + f.fileName + " before sending, or use Email with PDF instead.");
-        r._sent = true; li.classList.add("sent"); updateSentCount();
-      });
-
-      mk("Save PDF", "", "Save " + r._file + ".pdf", async () => {
-        try {
-          const bytes = await ensureFile(r);
-          offerFile(r._file + ".pdf", new Blob([bytes], { type: "application/pdf" }), status);
-        } catch (err) { itemStatus(status, "The file couldn't be created: " + (err && err.message ? err.message : err), true); }
       });
 
       mk("Copy password", "", "Copy password for " + r._file, async () => {
@@ -2380,22 +2378,13 @@ Thank you.</textarea>
   document.addEventListener("click", (e) => { if ($("moreMenu").open && !$("moreMenu").contains(e.target)) $("moreMenu").open = false; });
 
   function updateFilesToggle() {
-    const open = !!state.filesOpen, n = state.rows.length;
-    $("fileListWrap").hidden = !open;
-    const b = $("toggleFilesBtn");
-    b.setAttribute("aria-expanded", open ? "true" : "false");
-    b.textContent = open ? "Hide individual files" : "Show individual files (" + n + ")";
+    const n = state.rows.length;
+    $("filesTitle").textContent = "Individual files (" + n + ")";
   }
-  $("toggleFilesBtn").addEventListener("click", () => {
-    state.filesOpen = !state.filesOpen;
-    updateFilesToggle();
-    if (state.filesOpen) queueThumbnails();
-  });
 
   // ---------- Page previews ----------
   let thumbRun = 0;
   async function queueThumbnails() {
-    if (!state.filesOpen) return;   // previews are only drawn once the list is opened
     const run = ++thumbRun;
     const els = [...document.querySelectorAll("#fileList .thumb")];
     if (!els.length || !state.sourceBytes) return;
