@@ -1753,12 +1753,15 @@ Thank you.</textarea>
     return [...new Set(list.map((e) => e.toLowerCase()))];
   }
 
+  // A real email address, as opposed to an "@" inside a name like "TAN AH KOW @ TAN KOK SENG"
+  const LOOKS_LIKE_EMAIL = /[^\s@]+@[^\s@]+\.[A-Za-z]{2,}/;
+
   function findName(text) {
     const m = text.match(/(?:bill(?:ed)?\s+to|attention|attn\.?|customer\s+name)\s*[:\-]?\s*([^\n]{2,90})/i);
     if (!m) return "";
     let s = m[1].split(/\s{3,}|\s+(?:invoice|date|tel|phone|mobile|email|e-mail|address|uen|gst)\b/i)[0];
     s = s.replace(/[,;:|]+\s*$/, "").trim();
-    if (!/[A-Za-z\u00C0-\uFFFF]/.test(s) || /@/.test(s)) return "";
+    if (!/[A-Za-z\u00C0-\uFFFF]/.test(s) || LOOKS_LIKE_EMAIL.test(s)) return "";
     return s.slice(0, 60);
   }
 
@@ -1942,7 +1945,7 @@ Thank you.</textarea>
   function pickText(text) {
     let v = String(text).split(new RegExp("\\s{3,}|\\s+(?:" + STOP_WORDS + ")\\b\\s*[:#]", "i"))[0];
     v = v.replace(/^[\s:#\-–]+/, "").replace(/[,;:|\-–]+\s*$/, "").trim();
-    if (v.length < 2 || !/[A-Za-z\u00C0-\uFFFF]/.test(v) || /@/.test(v) || NOT_A_VALUE.test(v)) return "";
+    if (v.length < 2 || !/[A-Za-z\u00C0-\uFFFF]/.test(v) || LOOKS_LIKE_EMAIL.test(v) || NOT_A_VALUE.test(v)) return "";
     return v.slice(0, 60);
   }
 
@@ -1958,6 +1961,8 @@ Thank you.</textarea>
   }
 
   const SERVICE_CELL_LABELS = ["Type of Service", "Service Type", "Service Description", "Service", "Services", "Programme", "Program", "Particulars", "Description of Service", "Description", "Item Description"];
+  // Stops "Client" or "Customer" from matching "Client ID", "Customer No" and similar, which would give "ID" as the name
+  const NAME_GUARD = "(?!\\s*(?:id|i\\.d\\.?|no\\.?|nos?|number|code|ref|reference|account|acct|type|category|nric|fin|name)(?![A-Za-z]))";
   const NAME_CELL_LABELS = ["Bill To", "Billed To", "Attention", "Attn", "Client Name", "Customer Name", "Client", "Customer"];
   const SERVICE_GUARD = "(?!\\s*(?:period|month|date|charge|charges|fee|fees|tax|provider|no\\b|number))";
 
@@ -2074,7 +2079,7 @@ Thank you.</textarea>
       // With fewer than 3 invoices the sender's own address can't be told apart, so ask for a check
       else if (r._auto.email && state.rows.length < 3) r._flags.email = "check";
 
-      fill("name", findByCells(lines, NAME_CELL_LABELS, pickName)[0] || findName(text) || findName(raw));
+      fill("name", findByCells(lines, NAME_CELL_LABELS, pickName, { guard: NAME_GUARD })[0] || findName(text) || findName(raw));
 
       if (canFill("service")) {
         fill("service", findByCells(lines, withCustom(svcLabel, SERVICE_LABEL_ONLY), pickText, { guard: SERVICE_GUARD })[0]
